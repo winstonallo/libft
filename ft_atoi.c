@@ -1,27 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/04 17:11:36 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 19:54:12 by abied-ch         ###   ########.fr       */
+/*   Created: 2023/09/04 19:48:41 by abied-ch          #+#    #+#             */
+/*   Updated: 2023/09/04 19:58:28 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "libft.h"
 
-size_t	ft_strlen(const char *str)
+int	ft_atoi(const char *nptr)
 {
+	int	res;
 	int	i;
+	int	minus;
 
+	minus = 1;
 	i = 0;
-	while (*str)
+	res = 0;
+	while (nptr[i] == ' ')
+		i++;
+	if (nptr[i] == '-')
 	{
-		str++;
+		minus = -1;
 		i++;
 	}
-	return (i);
+	while (ft_isdigit(nptr[i]))
+	{
+		res = res * 10 + nptr[i] - 48;
+		i++;
+	}
+	return (res * minus);
 }
