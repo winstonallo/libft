@@ -6,13 +6,13 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:02:36 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 17:11:05 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/04 19:02:36 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *s, unsigned long long n)
+void	ft_bzero(void *s, size_t n)
 {
 	ft_memset (s, 0, n);
 }

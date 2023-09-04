@@ -6,15 +6,15 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 16:45:20 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 17:01:28 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/04 19:02:10 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memset(char *s, int x, unsigned long long n)
+void	*ft_memset(char *s, int x, size_t n)
 {
-	unsigned long long	i;
+	size_t	i;
 
 	i = 0;
 	while (i < n)

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "libft.h"
 #include <string.h>
+#include <ctype.h>
 
 int main(int argc, char *argv[])
 {
@@ -11,14 +12,9 @@ int main(int argc, char *argv[])
 	}*/
 	if (argc != 0)
 	{
-		int arr[10];
-		ft_memcpy(argv[1], arr, 6);
-		unsigned long i = 0;
-		while (i < strlen(argv[1]))
-		{
-			printf ("%d", argv[1][i]);
-			i++;
-		}
+		size_t i = 6;
+		printf("%p\n", ft_memmove(argv[1], "arthur", i));
+		printf("%p\n", memmove(argv[1], "arthur", i));
 	}
 	return 0;
 }
