@@ -6,13 +6,13 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 14:05:11 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 18:49:38 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/04 19:25:16 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isascii(char c)
+int	ft_isascii(int c)
 {
 	return (c <= 127 && c >= 0);
 }
