@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:21:27 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 17:42:18 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/04 17:46:25 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ void	*ft_memcpy(void *dest, const void *src, unsigned long long n)
 		d[i] = s[i];
 		i++;
 	}
-	return (d);
+	return (dest);
 }
 
