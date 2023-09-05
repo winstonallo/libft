@@ -1,24 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/05 10:51:17 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 11:29:20 by abied-ch         ###   ########.fr       */
+/*   Created: 2023/09/05 12:20:48 by abied-ch          #+#    #+#             */
+/*   Updated: 2023/09/05 12:55:10 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	while (*s)
+	size_t	i;
+	size_t	j;
+
+	if (little[0] == '\0')
+		return ((char *)big);
+	i = 0;
+	j = 0;
+	while (i < len)
 	{
-		if (*s == c)
-			return ((char *)s);
-		s++;
+		if (big[i] == little[j])
+		{
+			if (little[j + 1] == '\0')
+				return ((char *)big + i - j);
+			j++;
+			i++;
+		}
+		else
+		{
+			i -= j;
+			j = 0;
+		}
+		i++;
 	}
 	return (0);
 }
