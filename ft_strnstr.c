@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 12:20:48 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 12:56:08 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:52:40 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 			if (little[j + 1] == '\0')
 				return ((char *)big + i - j);
 			j++;
-			i++;
 		}
 		else
 		{

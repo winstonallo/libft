@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:16:54 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 11:25:09 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:27:33 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	{
 		if (s1[i] != s2[i])
 		{
-			if (s1[i] - s2[i] > 0)
-				return (1);
-			else if (s1[i] - s2[i] < 0)
-				return (-1);
+			return (s1[i] - s2[i]);
 		}
 		i++;
 	}
