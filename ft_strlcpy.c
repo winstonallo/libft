@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 19:06:14 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/04 19:18:59 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/05 17:32:16 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 		i++;
 	}
 	dst[i] = '\0';
-	return (size - 1);
+	return (i);
 }

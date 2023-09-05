@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:42:04 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 14:22:46 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/05 17:20:45 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <ctype.h>
+# include <stddef.h>
+# include <bsd/string.h>
 
 int		ft_isdigit(int c);
 int		ft_isalpha(int c);

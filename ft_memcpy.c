@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:21:27 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 14:15:34 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/05 16:01:47 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	const unsigned char	*s;
-	unsigned char		*d;
-	size_t				i;
+	char	*s;
+	char	*d;
+	size_t	i;
 
-	s = src;
+	s = (char *)src;
 	i = 0;
-	d = dest;
-
+	d = (char *)dest;
 	while (i < n)
 	{
 		d[i] = s[i];
