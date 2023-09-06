@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 11:07:49 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 12:35:25 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 12:43:36 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,10 @@ char	**ft_split(char const *s, char c)
 	while (*s)
 	{
 		arr[i] = ft_get_next_word(s, c);
-		printf("%s\n", arr[i]);
-		printf("%d\n", ft_word_length(s, c));
 		if (ft_word_length(s, c) == 0)
 			return (arr);
-		s += ft_word_length(s, c) + 1;
 		arr[i][ft_word_length(s, c) + 1] = '\0';
+		s += ft_word_length(s, c) + 1;
 		i++;
 	}
 	arr[i] = NULL;
