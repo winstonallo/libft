@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:42:04 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 14:44:36 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:02:56 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,7 @@ int		ft_word_length(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 int		ft_is_set(char c, const char *s);
+char	*ft_itoa(int n);
+int		ft_get_int_length(int n);
 
 #endif
