@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 16:45:20 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 19:05:02 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 12:47:05 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@ void	*ft_memset(void *s, int x, size_t n)
 
 	p = (unsigned char *)s;
 	while (n--)
-	// {
 		*p++ = (unsigned char)x;
-	// }
-	// *p = '\0';
 	return (s);
 }

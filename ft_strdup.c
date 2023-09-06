@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 12:58:29 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 14:15:27 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 12:46:43 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,3 @@ char	*ft_strdup(const char *src)
 	ft_strlcpy(dest, src, size);
 	return ((char *)dest);
 }
-
