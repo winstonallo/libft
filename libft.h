@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:42:04 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 11:47:43 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:49:36 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ char	**ft_split(char const *s, char c);
 int		ft_count_words(const char *s, int c);
 char	*ft_get_next_word(const char *s, int c);
 int		ft_word_length(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 18:01:20 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/05 16:08:29 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 13:47:08 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,20 @@
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	*s;
-	char	*d;
-	char	*temp;
+	const char	*csrc;
+	char		*cdst;
 
-	d = (char *)dest;
-	s = (char *)src;
-	temp = (char *)src;
-	ft_memcpy(temp, s, n);
-	ft_memcpy(d, temp, n);
+	cdst = dest;
+	csrc = src;
+	if (dest < src)
+		ft_memcpy(dest, src, n);
+	else
+	{
+		while (n != 0)
+		{
+			cdst[n] = csrc[n];
+			n--;
+		}
+	}
 	return (dest);
 }
