@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 18:01:20 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 16:56:50 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/06 19:15:38 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	{
 		while (n != 0)
 		{
-			cdst[n] = csrc[n];
 			n--;
+			cdst[n] = csrc[n];
 		}
 	}
 	return (dest);
