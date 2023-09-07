@@ -6,47 +6,53 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:13:53 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 14:43:41 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 17:00:45 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_is_set(char c, const char *s)
+int	ft_start(const char *s1, const char *set)
 {
-	while (*s)
+	size_t	i;
+
+	i = 0;
+	while (i < ft_strlen(s1))
 	{
-		if (*s == c)
-			return (1);
-		s++;
+		if (ft_strchr(set, s1[i]) == 0)
+			break ;
+		i++;
 	}
-	return (0);
+	return (i);
+}
+
+int	ft_end(const char *s1, const char *set)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < ft_strlen(s1))
+	{
+		if (ft_strchr(set, s1[ft_strlen(s1) - i - 1]) == 0)
+			break ;
+		i++;
+	}
+	return (ft_strlen(s1) - i);
 }
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	int		i;
-	int		counter;
-	char	*dest;
-	int		j;
+	int		s;
+	int		e;
+	char	*res;
 
-	j = 0;
-	counter = 0;
-	i = -1;
-	while (s1[++i])
-	{
-		if (ft_is_set(s1[i], set) == 0)
-			counter++;
-	}
-	dest = malloc((counter + 1) * sizeof(char));
-	i = -1;
-	while (s1[++i])
-	{
-		if (ft_is_set(s1[i], set) == 0)
-		{
-			dest[j] = s1[i];
-			j++;
-		}
-	}
-	return (dest);
+	if (s1 == NULL)
+		return (NULL);
+	if (set == NULL)
+		return (ft_strdup(s1));
+	s = ft_start(s1, set);
+	e = ft_end(s1, set);
+	res = malloc((e - s + 1) * sizeof(char));
+	ft_strlcpy(res, s1 + s, e - s + 1);
+	return (res);
 }
