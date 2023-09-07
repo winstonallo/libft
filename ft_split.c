@@ -6,11 +6,28 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 11:07:49 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/07 13:32:14 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 19:09:46 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+int	ft_count_words(const char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	while (*s)
+	{
+		while (*s == c)
+			s++;
+		if (*s)
+			i++;
+		while (*s != c && *s)
+			s++;
+	}
+	return (i);
+}
 
 int	ft_count_words(const char *s, int c)
 {
