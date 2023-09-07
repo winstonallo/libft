@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 15:13:01 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 16:30:01 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 15:49:02 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 		dest[i] = f(i, s[i]);
 		i++;
 	}
+	dest[i] = '\0';
 	return (dest);
 }

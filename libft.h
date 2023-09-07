@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 13:42:04 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/07 12:09:55 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 15:19:27 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <bsd/string.h>
 # include <unistd.h>
 
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
 int		ft_isdigit(int c);
 int		ft_isalpha(int c);
 int		ft_isalnum(int c);
@@ -45,20 +50,15 @@ char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strdup(const char *src);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	**ft_split(char const *s, char c);
-int		ft_count_words(const char *s, int c);
-char	*ft_get_next_word(const char *s, int c);
-int		ft_word_length(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
-int		ft_is_set(char c, const char *s);
 char	*ft_itoa(int n);
-int		ft_get_int_length(int n);
-int		ft_recursive_power(int nb, int power);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+t_list	*ft_lstnew(void *content);
 
 #endif
