@@ -11,19 +11,25 @@ SRCS = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c ft_strle
 
 OBJS = $(SRCS:.c=.o)
 
+BONUS_SRCS = ft_lstnew.c ft_lstadd_front.c
+
+BONUS_OBJS = $(BONUS_SRCS:.c=.o)
+
 NAME = libft.a
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
 
 all: $(NAME)
 
 clean: 
-	rm -f $(OBJS)
+	rm -f $(OBJS, BONUS_OBJS)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+bonus: $(BONUS_OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
