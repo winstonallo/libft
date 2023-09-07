@@ -22,7 +22,7 @@ NAME = libft.a
 all: $(NAME)
 
 clean: 
-	rm -f $(OBJS, BONUS_OBJS)
+	rm -f $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
 	rm -f $(NAME)
@@ -37,5 +37,9 @@ bonus: $(BONUS_OBJS)
 $(NAME): $(OBJS)
 	ar -rc $(NAME) $(OBJS)
 	ranlib $(NAME)
+
+$(BONUS_NAME): $(BONUS_OBJS)
+	ar -rc $(BONUS_NAME) $(BONUS_OBJS)
+	ranlib $(BONUS_NAME)
 
 

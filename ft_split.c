@@ -29,23 +29,6 @@ int	ft_count_words(const char *s, int c)
 	return (i);
 }
 
-int	ft_count_words(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (*s)
-	{
-		while (*s == c)
-			s++;
-		if (*s)
-			i++;
-		while (*s != c && *s)
-			s++;
-	}
-	return (i);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char	**arr;
