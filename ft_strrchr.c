@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:06:23 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/07 11:32:00 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 18:05:05 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,15 @@ char	*ft_strrchr(const char *s, int c)
 
 	j = -1;
 	i = 0;
-	while (c > 256)
-		c -= 256;
 	while (s[i])
 	{
-		if (s[i] == c)
+		if (s[i] == (char)c)
 			j = i;
 		i++;
 	}
-	printf("%d\n", j);
-	if (*s == c && c == 0)
+	if (*s == (char)c && (char)c == 0)
 		return ((char *)s);
-	if (j == -1 && c == 0)
+	if (j == -1 && (char)c == 0)
 		return ((char *)s + ft_strlen(s));
 	if (j == -1)
 		return (0);
