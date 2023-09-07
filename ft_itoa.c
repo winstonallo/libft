@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:37 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/07 14:12:37 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 17:47:31 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*ft_itoa(int n)
 	char	*res;
 
 	i = ft_get_int_length(n);
-	printf("%zu\n", i);
 	ln = n;
 	if (n < 0)
 	{
