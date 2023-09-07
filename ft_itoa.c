@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:37 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 15:07:23 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 14:12:37 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	ft_get_int_length(int n)
 {
 	int	length;
 
+	if (n == 0)
+		return (1);
 	length = 0;
 	while (n != 0)
 	{
@@ -25,40 +27,30 @@ int	ft_get_int_length(int n)
 	return (length);
 }
 
-int	ft_recursive_power(int nb, int power)
-{
-	if (power < 0)
-		return (0);
-	if (power == 0)
-		return (1);
-	else
-		return (nb * (ft_recursive_power(nb, power - 1)));
-}
-
 char	*ft_itoa(int n)
 {
 	long	ln;
-	long	divider;
-	int		i;
+	size_t	i;
 	char	*res;
 
-	i = 0;
+	i = ft_get_int_length(n);
+	printf("%zu\n", i);
 	ln = n;
-	res = malloc((ft_get_int_length(n) + 1) * (sizeof(char)));
 	if (n < 0)
 	{
-		res[i] = '-';
 		ln = -ln;
 		i++;
 	}
-	divider = ft_recursive_power(10, ft_get_int_length(n) - 1);
-	while (divider)
+	res = malloc((i + 1) * (sizeof(char)));
+	if (res == NULL)
+		return (NULL);
+	*(res + i) = 0;
+	while (i--)
 	{
-		res[i] = ln / divider + 48;
-		i++;
-		ln = ln % divider;
-		divider = divider / 10;
+		*(res + i) = ln % 10 + 48;
+		ln = ln / 10;
 	}
-	res[i] = '\0';
+	if (n < 0)
+		*(res + 0) = '-';
 	return (res);
 }
