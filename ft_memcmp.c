@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 12:15:18 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 12:45:10 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 10:47:07 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,12 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	s11 = (unsigned char *)s1;
 	s22 = (unsigned char *)s2;
 	i = 0;
-	while ((s11[i] != '\0' || s22[i] != '\0') && i <= n)
+	if (n == 0)
+		return (0);
+	while (i < n)
 	{
 		if (s11[i] != s22[i])
-		{
-			if (s11[i] - s22[i] > 0)
-				return (1);
-			else if (s11[i] - s22[i] < 0)
-				return (-1);
-		}
+			return (s11[i] - s22[i]);
 		i++;
 	}
 	return (0);
