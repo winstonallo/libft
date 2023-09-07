@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 18:01:20 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/06 19:15:38 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 18:53:41 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 
 	cdst = dest;
 	csrc = src;
+	if (!dest && !src)
+		return (NULL);
 	if (dest < src)
 		ft_memcpy(dest, src, n);
 	else

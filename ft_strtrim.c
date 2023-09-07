@@ -6,7 +6,7 @@
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:13:53 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/07 17:31:00 by abied-ch         ###   ########.fr       */
+/*   Updated: 2023/09/07 18:56:54 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,15 @@ char	*ft_strtrim(char const *s1, char const *set)
 
 	if (s1 == NULL)
 		return (NULL);
-	if (set == NULL)
+	if (set == NULL || set[0] == '\0')
 		return (ft_strdup(s1));
 	s = ft_start(s1, set);
 	e = ft_end(s1, set);
+	if (e - s <= 0)
+		return (ft_calloc(1, sizeof(char)));
 	res = malloc((e - s + 1) * sizeof(char));
+	if (res == NULL)
+		return (NULL);
 	ft_strlcpy(res, s1 + s, e - s + 1);
 	return (res);
 }
