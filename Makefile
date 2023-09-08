@@ -45,5 +45,3 @@ $(NAME): $(OBJS)
 $(BONUS_NAME): $(BONUS_OBJS)
 	ar -rc $(BONUS_NAME) $(BONUS_OBJS)
 	ranlib $(BONUS_NAME)
-
-
