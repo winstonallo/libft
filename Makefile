@@ -11,7 +11,8 @@ SRCS = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c ft_strle
 
 OBJS = $(SRCS:.c=.o)
 
-BONUS_SRCS = ft_lstnew.c ft_lstadd_front.c
+BONUS_SRCS = ft_lstnew.c ft_lstadd_front.c ft_lstadd_back.c ft_lstlast.c \
+             ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_lstadd_back.c
 
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
@@ -29,7 +30,9 @@ fclean: clean
 
 re: fclean all
 
-bonus: $(BONUS_OBJS)
+bonus: $(BONUS_OBJS) $(OBJS)
+	ar -rc $(NAME) $(BONUS_OBJS) $(OBJS)
+	ranlib $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
