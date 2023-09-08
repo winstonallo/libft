@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abied-ch <abied-ch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/04 17:02:36 by abied-ch          #+#    #+#             */
-/*   Updated: 2023/09/08 10:38:07 by abied-ch         ###   ########.fr       */
+/*   Created: 2023/09/08 12:43:20 by abied-ch          #+#    #+#             */
+/*   Updated: 2023/09/08 14:09:21 by abied-ch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *s, size_t n)
+int	ft_lstsize(t_list *lst)
 {
-	ft_memset (s, 0, n);
+	int	i;
+
+	while (lst->next)
+		i++;
+	i++;
+	return (i);
 }
