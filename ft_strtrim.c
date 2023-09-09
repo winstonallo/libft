@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	ft_start(const char *s1, const char *set)
+static int	ft_start(const char *s1, const char *set)
 {
 	size_t	i;
 
@@ -26,7 +26,7 @@ int	ft_start(const char *s1, const char *set)
 	return (i);
 }
 
-int	ft_end(const char *s1, const char *set)
+static int	ft_end(const char *s1, const char *set)
 {
 	size_t	i;
 
