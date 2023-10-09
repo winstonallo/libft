@@ -26,11 +26,9 @@ all: $(OBJ_DIR) $(NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
-	echo "Object Files Removed."
 
 fclean: clean
 	rm -f $(NAME)
-	echo "Library removed."
 
 re: fclean all
 
@@ -38,10 +36,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-		echo "Creating Library..\n"
-		ar rc $(NAME) $(OBJS)
-		ranlib $(NAME)
-		echo "Library Compiled: libft.a"
+	ar rc $(NAME) $(OBJS)
+	ranlib $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
