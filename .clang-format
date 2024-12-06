@@ -1,0 +1,7 @@
+AlignArrayOfStructures: Left
+IndentWidth: 4
+ColumnLimit: 160
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AlwaysBreakAfterDefinitionReturnType: All
+InsertNewlineAtEOF: true
