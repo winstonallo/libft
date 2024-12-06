@@ -1,5 +1,6 @@
 -Iinclude
 -Ialloc
+-Imem
 -Wall
 -Wextra
 -Werror
