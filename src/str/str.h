@@ -95,6 +95,7 @@ bool ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_sign
 // - `buffer`: Pointer to a character buffer where the resulting string will be stored.
 // - `buffer_size`: The size of the `buffer`. Must be large enough to store the result plus the null terminator.
 // - `is_signed`: Indicates whether the input value should be treated as signed (true) or unsigned (false).
+// - `uppercase`: Indicated whether letters in base > 10 values should be printed in uppercase format (true) or lowercase format (false).
 //
 // Returns:
 // - `true` if the conversion was successful, and `buffer` contains the result as a null-terminated string.
@@ -111,6 +112,6 @@ bool ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_sign
 // Safety:
 // The caller must ensure that the `buffer` is large enough to hold the result. For example, a base 2
 // representation of a 64-bit integer requires up to 65 characters (64 digits + null terminator).
-bool ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed);
+bool ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed, bool uppercase);
 
 #endif

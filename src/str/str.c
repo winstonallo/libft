@@ -342,13 +342,14 @@ ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_signed) {
 }
 
 __attribute__((always_inline)) static inline bool
-convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_size) {
+convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_size, bool uppercase) {
     if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
         errno = EINVAL;
         return false;
     }
 
-    const char *digits = "0123456789ABCDEF";
+    const char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+
     char tmp[65];
     size_t idx = 0;
 
@@ -374,7 +375,7 @@ convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_s
 }
 
 __attribute__((always_inline)) static inline bool
-convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size) {
+convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size, bool uppercase) {
     if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
         errno = EINVAL;
         return false;
@@ -383,7 +384,7 @@ convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size
     bool negative = value < 0;
     uintmax_t abs_value = negative ? -(uintmax_t)value : (uintmax_t)value;
 
-    if (!convert_unsigned_to_str(abs_value, base, buffer, buffer_size)) {
+    if (!convert_unsigned_to_str(abs_value, base, buffer, buffer_size, uppercase)) {
         return false;
     }
 
@@ -401,7 +402,7 @@ convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size
 }
 
 bool
-ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed) {
+ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed, bool uppercase) {
     if (!value || !buffer || buffer_size == 0 || base < 2 || base > 16 || (bits != 8 && bits != 16 && bits != 32 && bits != 64)) {
         errno = EINVAL;
         return false;
@@ -410,24 +411,24 @@ ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool 
     if (is_signed) {
         switch (bits) {
         case 8:
-            return convert_signed_to_str(*(int8_t *)value, base, buffer, buffer_size);
+            return convert_signed_to_str(*(int8_t *)value, base, buffer, buffer_size, uppercase);
         case 16:
-            return convert_signed_to_str(*(int16_t *)value, base, buffer, buffer_size);
+            return convert_signed_to_str(*(int16_t *)value, base, buffer, buffer_size, uppercase);
         case 32:
-            return convert_signed_to_str(*(int32_t *)value, base, buffer, buffer_size);
+            return convert_signed_to_str(*(int32_t *)value, base, buffer, buffer_size, uppercase);
         case 64:
-            return convert_signed_to_str(*(int64_t *)value, base, buffer, buffer_size);
+            return convert_signed_to_str(*(int64_t *)value, base, buffer, buffer_size, uppercase);
         }
     } else {
         switch (bits) {
         case 8:
-            return convert_unsigned_to_str(*(uint8_t *)value, base, buffer, buffer_size);
+            return convert_unsigned_to_str(*(uint8_t *)value, base, buffer, buffer_size, uppercase);
         case 16:
-            return convert_unsigned_to_str(*(uint16_t *)value, base, buffer, buffer_size);
+            return convert_unsigned_to_str(*(uint16_t *)value, base, buffer, buffer_size, uppercase);
         case 32:
-            return convert_unsigned_to_str(*(uint32_t *)value, base, buffer, buffer_size);
+            return convert_unsigned_to_str(*(uint32_t *)value, base, buffer, buffer_size, uppercase);
         case 64:
-            return convert_unsigned_to_str(*(uint64_t *)value, base, buffer, buffer_size);
+            return convert_unsigned_to_str(*(uint64_t *)value, base, buffer, buffer_size, uppercase);
         }
     }
 
