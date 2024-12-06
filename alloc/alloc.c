@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "mem.h"
 #include <errno.h>
 #include <stdlib.h>
 
@@ -24,8 +24,8 @@ ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
 }
 
 // Allocates a buffer of size `nmemb * size`, 0-initialized bytes.
-// Returns NULL on malloc failure, or if the `nmemb * size` would
-// result in an overflow.
+// Returns NULL on malloc failure, or if `nmemb * size` would
+// result in a `size_t` overflow.
 void *
 ft_calloc(size_t nmemb, size_t size) {
     void *dest;
@@ -45,22 +45,21 @@ ft_calloc(size_t nmemb, size_t size) {
         return NULL;
     }
 
-    ft_bzero(dest, size * nmemb);
+    ft_memset(dest, 0, size * nmemb);
     return dest;
 }
 
-char *
-ft_strdup(const char *src) {
+// Returns a heap-allocated duplicate of `src`.
+// Returns NULL on malloc failure.
+void *
+ft_memdup(const void *src, const size_t bytes) {
     char *dest;
-    int size;
 
-    size = ft_strlen(src) + 1;
-
-    dest = (char *)malloc(sizeof(char) * (size));
+    dest = (char *)malloc(bytes);
     if (!dest) {
         return NULL;
     }
 
-    ft_memcpy(dest, src, size);
+    ft_memcpy(dest, src, bytes);
     return (char *)dest;
 }
