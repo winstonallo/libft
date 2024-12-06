@@ -1,13 +1,11 @@
 #include "alloc.h"
 #include "mem.h"
 #include "stdlib.h"
+#include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-// Returns the number of bytes between `str` and the next `\0` character.
-//
-// Safety:
-// It is the caller's responsiblity to ensure that `str` is a valid string terminated by a
-// `\0` character. Failure to do so will result in invalid memory access.
 size_t
 ft_strlen(const char *str) {
     size_t len;
@@ -21,11 +19,6 @@ ft_strlen(const char *str) {
     return len;
 }
 
-// Returns a heap-allocated duplicate of `str[start..start + len]`.
-//
-// Safety:
-// It is the caller's responsiblity to ensure that `str` is a valid string terminated by a
-// `\0` character. Failure to do so will result in invalid memory access.
 char *
 ft_substr(char const *str, unsigned int start, size_t len) {
     char *dest;
@@ -84,11 +77,6 @@ ft_strtrim(char const *str, char const *set) {
     return res;
 }
 
-// Allocates and returns a string built by concatenating `a` and `b`.
-//
-// Safety:
-// It is the caller's responsiblity to ensure that `a` and `b` are valid strings terminated by
-// `\0` characters. Failure to do so will result in invalid memory access.
 char *
 ft_strjoin(char *a, char *b) {
 
@@ -186,4 +174,263 @@ ft_split(char const *str, char delimiter) {
 
     res[idx] = NULL;
     return res;
+}
+
+char *
+ft_strnstr(const char *haystack, const char *needle, size_t n_bytes) {
+    size_t h_idx = 0;
+    size_t n_idx = 0;
+
+    if (needle[0] == '\0') {
+        return (char *)haystack;
+    }
+
+    while (h_idx < n_bytes && haystack[h_idx]) {
+
+        if (haystack[h_idx] == needle[n_idx]) {
+            if (needle[n_idx + 1] == '\0') {
+                return ((char *)haystack + h_idx - n_idx);
+            }
+            n_idx++;
+        } else {
+            h_idx -= n_idx;
+            n_idx = 0;
+        }
+
+        h_idx++;
+    }
+    return NULL;
+}
+
+char *
+ft_tolower(char *str) {
+    for (size_t idx = 0; str[idx]; ++idx) {
+        str[idx] = (str[idx] <= 'Z' && str[idx] >= 'A') ? str[idx] + 32 : str[idx];
+    }
+    return str;
+}
+
+char *
+ft_toupper(char *str) {
+    for (size_t idx = 0; str[idx]; ++idx) {
+        str[idx] = (str[idx] <= 'z' && str[idx] >= 'a') ? str[idx] - 32 : str[idx];
+    }
+    return str;
+}
+
+typedef bool (*ConversionFunc)(const char *nptr, int base, void *out_value, bool negative);
+
+__attribute__((always_inline)) static inline bool
+convert_unsigned(const char *nptr, int base, void *out_value, bool negative) {
+    if (negative) {
+        errno = EINVAL;
+        return false;
+    }
+
+    uintmax_t result = 0;
+
+    while (*nptr) {
+        int digit;
+        if (*nptr >= '0' && *nptr <= '9') {
+            digit = *nptr - '0';
+        } else if (*nptr >= 'a' && *nptr <= 'f') {
+            digit = *nptr - 'a' + 10;
+        } else if (*nptr >= 'A' && *nptr <= 'F') {
+            digit = *nptr - 'A' + 10;
+        } else {
+            break;
+        }
+
+        if (digit >= base) {
+            break;
+        }
+
+        result = result * base + digit;
+        nptr++;
+    }
+
+    if (result <= UINT8_MAX) {
+        *(uint8_t *)out_value = (uint8_t)result;
+    } else if (result <= UINT16_MAX) {
+        *(uint16_t *)out_value = (uint16_t)result;
+    } else if (result <= UINT32_MAX) {
+        *(uint32_t *)out_value = (uint32_t)result;
+    } else if (result <= UINT64_MAX) {
+        *(uint64_t *)out_value = (uint64_t)result;
+    } else {
+        errno = ERANGE;
+        return false;
+    }
+
+    return true;
+}
+
+__attribute__((always_inline)) static inline bool
+convert_signed(const char *nptr, int base, void *out_value, bool negative) {
+    intmax_t result = 0;
+    while (*nptr) {
+        int digit;
+        if (*nptr >= '0' && *nptr <= '9') {
+            digit = *nptr - '0';
+        } else if (*nptr >= 'a' && *nptr <= 'f') {
+            digit = *nptr - 'a' + 10;
+        } else if (*nptr >= 'A' && *nptr <= 'F') {
+            digit = *nptr - 'A' + 10;
+        } else {
+            break;
+        }
+
+        if (digit >= base) {
+            break;
+        }
+
+        result = result * base + digit;
+        nptr++;
+    }
+
+    if (negative) {
+        result = -result;
+    }
+
+    if (result >= INT8_MIN && result <= INT8_MAX) {
+        *(int8_t *)out_value = (int8_t)result;
+    } else if (result >= INT16_MIN && result <= INT16_MAX) {
+        *(int16_t *)out_value = (int16_t)result;
+    } else if (result >= INT32_MIN && result <= INT32_MAX) {
+        *(int32_t *)out_value = (int32_t)result;
+    } else if (result >= INT64_MIN && result <= INT64_MAX) {
+        *(int64_t *)out_value = (int64_t)result;
+    } else {
+        errno = ERANGE;
+        return false;
+    }
+
+    return true;
+}
+
+bool
+ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_signed) {
+    if (!nptr || base < 2 || base > 16 || (bits != 8 && bits != 16 && bits != 32 && bits != 64)) {
+        errno = EINVAL;
+        return false;
+    }
+
+    while (*nptr == ' ' || *nptr == '\t') {
+        nptr++;
+    }
+
+    bool negative = *nptr == '-';
+    if (*nptr == '+' || *nptr == '-') {
+        nptr++;
+    }
+
+    if (base == 0) {
+        if (*nptr == '0') {
+            nptr++;
+            base = (*nptr == 'x' || *nptr == 'X') ? 16 : 8;
+            if (base == 16 && *nptr == 'x') {
+                nptr++;
+            }
+        } else {
+            base = 10;
+        }
+    }
+
+    ConversionFunc convert = is_signed ? convert_signed : convert_unsigned;
+
+    return convert(nptr, base, out_value, negative);
+}
+
+__attribute__((always_inline)) static inline bool
+convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_size) {
+    if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
+        errno = EINVAL;
+        return false;
+    }
+
+    const char *digits = "0123456789ABCDEF";
+    char tmp[65];
+    size_t idx = 0;
+
+    do {
+        if (idx >= sizeof(tmp) - 1) {
+            errno = ERANGE;
+            return false;
+        }
+        tmp[idx++] = digits[value % base];
+        value /= base;
+    } while (value > 0);
+
+    if (idx >= buffer_size) {
+        errno = ERANGE;
+        return false;
+    }
+
+    for (size_t i = 0; i < idx; ++i) {
+        buffer[i] = tmp[idx - i - 1];
+    }
+    buffer[idx] = '\0';
+    return true;
+}
+
+__attribute__((always_inline)) static inline bool
+convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size) {
+    if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
+        errno = EINVAL;
+        return false;
+    }
+
+    bool negative = value < 0;
+    uintmax_t abs_value = negative ? -(uintmax_t)value : (uintmax_t)value;
+
+    if (!convert_unsigned_to_str(abs_value, base, buffer, buffer_size)) {
+        return false;
+    }
+
+    if (negative) {
+        size_t len = ft_strlen(buffer);
+        if (len + 1 >= buffer_size) {
+            errno = ERANGE;
+            return false;
+        }
+        ft_memcpy(buffer + 1, buffer, len + 1);
+        buffer[0] = '-';
+    }
+
+    return true;
+}
+
+bool
+ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed) {
+    if (!value || !buffer || buffer_size == 0 || base < 2 || base > 16 || (bits != 8 && bits != 16 && bits != 32 && bits != 64)) {
+        errno = EINVAL;
+        return false;
+    }
+
+    if (is_signed) {
+        switch (bits) {
+        case 8:
+            return convert_signed_to_str(*(int8_t *)value, base, buffer, buffer_size);
+        case 16:
+            return convert_signed_to_str(*(int16_t *)value, base, buffer, buffer_size);
+        case 32:
+            return convert_signed_to_str(*(int32_t *)value, base, buffer, buffer_size);
+        case 64:
+            return convert_signed_to_str(*(int64_t *)value, base, buffer, buffer_size);
+        }
+    } else {
+        switch (bits) {
+        case 8:
+            return convert_unsigned_to_str(*(uint8_t *)value, base, buffer, buffer_size);
+        case 16:
+            return convert_unsigned_to_str(*(uint16_t *)value, base, buffer, buffer_size);
+        case 32:
+            return convert_unsigned_to_str(*(uint32_t *)value, base, buffer, buffer_size);
+        case 64:
+            return convert_unsigned_to_str(*(uint64_t *)value, base, buffer, buffer_size);
+        }
+    }
+
+    errno = EINVAL;
+    return false;
 }
