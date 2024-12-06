@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// Returns a pointer to the first occurence of `c` in `s`.
+// If `c` does not occur in `s`, returns a NULL pointer.
 void *
 ft_memchr(const void *s, int c, size_t n) {
     while (n != 0) {
@@ -10,7 +12,7 @@ ft_memchr(const void *s, int c, size_t n) {
         n--;
         s++;
     }
-    return 0;
+    return NULL;
 }
 
 short

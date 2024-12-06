@@ -48,3 +48,19 @@ ft_calloc(size_t nmemb, size_t size) {
     ft_bzero(dest, size * nmemb);
     return dest;
 }
+
+char *
+ft_strdup(const char *src) {
+    char *dest;
+    int size;
+
+    size = ft_strlen(src) + 1;
+
+    dest = (char *)malloc(sizeof(char) * (size));
+    if (!dest) {
+        return NULL;
+    }
+
+    ft_memcpy(dest, src, size);
+    return (char *)dest;
+}
