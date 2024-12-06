@@ -48,12 +48,6 @@ ft_substr(char const *str, unsigned int start, size_t len) {
     return dest;
 }
 
-// Allocates and returns a new string with characters specified in `set` removed
-// from the beginning and end of the input string `str`
-//
-// Safety:
-// It is the caller's responsiblity to ensure that `str` and `set` are valid strings terminated by
-// `\0` characters. Failure to do so will result in invalid memory access.
 char *
 ft_strtrim(char const *str, char const *set) {
     if (!str) {
@@ -151,11 +145,6 @@ count_words(const char *str, char delimiter) {
     return words;
 }
 
-// Allocates and returns an array of strings built by splitting `str` by `delimiter`.
-//
-// Safety:
-// It is the caller's responsiblity to ensure that `str` is a valid string terminated by a
-// `\0` character. Failure to do so will result in invalid memory access.
 char **
 ft_split(char const *str, char delimiter) {
     if (!str || !str[0]) {

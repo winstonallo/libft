@@ -2,10 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-// Allocates a buffer of size `bytes_new` and copies `old_buf` into it.
-// Returns NULL on malloc failure, or if `bytes_old` is larger than
-// `bytes_new`.
-void *
+__attribute__((warn_unused_result)) void *
 ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
     if (bytes_new < bytes_old) {
         return NULL;
@@ -23,10 +20,7 @@ ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
     return new_buf;
 }
 
-// Allocates a buffer of size `nmemb * size`, 0-initialized bytes.
-// Returns NULL on malloc failure, or if `nmemb * size` would
-// result in a `size_t` overflow.
-void *
+__attribute__((warn_unused_result)) void *
 ft_calloc(size_t nmemb, size_t size) {
     void *dest;
 
@@ -49,9 +43,7 @@ ft_calloc(size_t nmemb, size_t size) {
     return dest;
 }
 
-// Returns a heap-allocated duplicate of `src`.
-// Returns NULL on malloc failure.
-void *
+__attribute__((warn_unused_result)) void *
 ft_memdup(const void *src, const size_t bytes) {
     char *dest;
 

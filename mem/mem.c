@@ -1,8 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// Returns a pointer to the first occurence of `c` in `s`.
-// If `c` does not occur in `s`, returns a NULL pointer.
 void *
 ft_memsrch(const void *haystack, int needle, size_t n) {
     while (n != 0) {
@@ -61,28 +59,6 @@ ft_memset(void *dest, int c, size_t n) {
     tmp = (unsigned char *)dest;
     while (n--) {
         *tmp++ = (unsigned char)c;
-    }
-
-    return dest;
-}
-
-void *
-ft_memmove(void *dest, const void *src, size_t n) {
-    const char *csrc;
-    char *cdst;
-
-    cdst = dest;
-    csrc = src;
-    if (!dest && !src)
-        return NULL;
-
-    if (dest < src) {
-        ft_memcpy(dest, src, n);
-    } else {
-        while (n != 0) {
-            n--;
-            cdst[n] = csrc[n];
-        }
     }
 
     return dest;
