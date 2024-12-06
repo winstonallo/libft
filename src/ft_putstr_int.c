@@ -12,21 +12,15 @@
 
 #include "../include/libft.h"
 
-int	ft_putstr_int(char *s)
-{
-	int	i;
+int
+ft_putstr_int(int fd, char *s) {
+    if (!s) {
+        ft_putstr_fd("(null)", fd);
+        return 6;
+    }
 
-	i = 0;
-	if (!s)
-	{
-		ft_putstr_fd("(null)", 1);
-		return (6);
-	}
-	while (*s)
-	{
-		write(1, s, 1);
-		i++;
-		s++;
-	}
-	return (i);
+    size_t len = ft_strlen(s);
+
+    write(fd, s, len);
+    return len;
 }

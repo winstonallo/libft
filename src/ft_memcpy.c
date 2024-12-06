@@ -12,17 +12,22 @@
 
 #include "../include/libft.h"
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t	i;
+void *
+ft_memcpy(void *dest, const void *src, size_t n) {
+    if (!dest && !src) {
+        return (NULL);
+    }
 
-	i = 0;
-	if (!dest && !src)
-		return (NULL);
-	while (i < n)
-	{
-		((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
-		i++;
-	}
-	return (dest);
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__)
+    __asm__ __volatile__("rep movsb" : : "S"(src), "D"(dest), "c"(n) : "memory");
+#else
+    size_t i = 0;
+
+    while (i < n) {
+        ((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
+        i++;
+    }
+#endif
+
+    return dest;
 }

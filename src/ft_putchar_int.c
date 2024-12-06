@@ -12,8 +12,8 @@
 
 #include "../include/libft.h"
 
-int	ft_putchar_int(char c)
-{
-	ft_putchar_fd(c, 1);
-	return (1);
+int
+ft_putchar_int(int fd, char c) {
+    ft_putchar_fd(c, fd);
+    return 1;
 }

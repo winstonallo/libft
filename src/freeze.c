@@ -11,12 +11,12 @@
 /* ************************************************************************** */
 
 #include "../include/libft.h"
+#include <stdlib.h>
 
-void	freeze(void *ptr)
-{
-	if (ptr)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
+void
+freeze(void *ptr) {
+    if (ptr) {
+        free(ptr);
+        ptr = NULL;
+    }
 }

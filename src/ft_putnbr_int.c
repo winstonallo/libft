@@ -11,57 +11,58 @@
 /* ************************************************************************** */
 
 #include "../include/libft.h"
+#include <stdlib.h>
 
-static int	ft_get_int_length(int n)
-{
-	int	length;
+static int
+ft_get_int_length(int n) {
+    int length;
 
-	if (n == 0)
-		return (1);
-	length = 0;
-	while (n != 0)
-	{
-		n /= 10;
-		length++;
-	}
-	return (length);
+    if (n == 0)
+        return (1);
+    length = 0;
+    while (n != 0) {
+        n /= 10;
+        length++;
+    }
+    return (length);
 }
 
-static char	*ft_allocate_room(int i)
-{
-	char	*s;
+static char *
+ft_allocate_room(int i) {
+    char *s;
 
-	s = malloc((i + 1) * (sizeof(char)));
-	if (s == NULL)
-		return (0);
-	return (s);
+    s = malloc((i + 1) * (sizeof(char)));
+    if (!s)
+        return (0);
+    return (s);
 }
 
-int	ft_putnbr_int(int n)
-{
-	long	ln;
-	size_t	i;
-	char	*res;
-	int		len;
+int
+ft_putnbr_int(int fd, int n) {
+    long ln;
+    size_t i;
+    char *res;
+    int len;
 
-	i = ft_get_int_length(n);
-	ln = n;
-	if (n < 0)
-	{
-		ln = -ln;
-		i++;
-	}
-	len = i;
-	res = ft_allocate_room(i);
-	*(res + i) = 0;
-	while (i--)
-	{
-		*(res + i) = ln % 10 + 48;
-		ln = ln / 10;
-	}
-	if (n < 0)
-		*(res + 0) = '-';
-	ft_putstr_fd(res, 1);
-	free(res);
-	return (len);
+    i = ft_get_int_length(n);
+    ln = n;
+    if (n < 0) {
+        ln = -ln;
+        i++;
+    }
+    len = i;
+    res = ft_allocate_room(i);
+    if (!res) {
+        return -1;
+    }
+    *(res + i) = 0;
+    while (i--) {
+        *(res + i) = ln % 10 + 48;
+        ln = ln / 10;
+    }
+    if (n < 0)
+        *(res + 0) = '-';
+    ft_putstr_fd(res, fd);
+    free(res);
+    return (len);
 }
