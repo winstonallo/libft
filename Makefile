@@ -16,7 +16,7 @@ SRCS =  $(SRC_DIR)/ft_isalpha.c $(SRC_DIR)/ft_isdigit.c $(SRC_DIR)/ft_isalnum.c 
         $(SRC_DIR)/ft_print_adress.c $(SRC_DIR)/ft_putchar_int.c $(SRC_DIR)/ft_putnbr_unsigned_int.c $(SRC_DIR)/ft_putstr_int.c \
         $(SRC_DIR)/ft_puthex_int.c $(SRC_DIR)/ft_putnbr_int.c $(SRC_DIR)/ft_strndup.c 
         
-        $(SRC_DIR)/alloc/alloc.c
+        alloc/alloc.c
 
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 

@@ -1,4 +1,5 @@
 #include "libft.h"
+#include <errno.h>
 #include <stdlib.h>
 
 // Allocates a buffer of size `bytes_new` and copies `old_buf` into it.
@@ -22,7 +23,9 @@ ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
     return new_buf;
 }
 
-// Allocates a buffer of size `nmemb * size`, 0-inialized bytes.
+// Allocates a buffer of size `nmemb * size`, 0-initialized bytes.
+// Returns NULL on malloc failure, or if the `nmemb * size` would
+// result in an overflow.
 void *
 ft_calloc(size_t nmemb, size_t size) {
     void *dest;
@@ -33,6 +36,7 @@ ft_calloc(size_t nmemb, size_t size) {
     }
 
     if ((size * nmemb) / nmemb != size) {
+        errno = ERANGE;
         return NULL;
     }
 
