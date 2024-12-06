@@ -10,6 +10,8 @@ SRCS =  ${SRC_DIR}/alloc/alloc.c \
         ${SRC_DIR}/mem/mem.c \
         ${SRC_DIR}/str/str.c \
         ${SRC_DIR}/print/print.c \
+        ${SRC_DIR}/bit/bit.c \
+        ${SRC_DIR}/char/char.c \
 
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 

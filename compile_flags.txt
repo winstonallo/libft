@@ -3,6 +3,7 @@
 -Isrc/str
 -Isrc/print
 -Isrc/char
+-Isrc/bit
 -Wall
 -Wextra
 -Werror
