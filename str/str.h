@@ -107,11 +107,10 @@ bool ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_sign
 // Notes:
 // - The caller must ensure that the `buffer` is large enough to hold the result. For example, a base 2
 //   representation of a 64-bit integer requires up to 65 characters (64 digits + null terminator).
-// - Base values outside the range 2–16 are not supported.
 //
 // Safety:
-// It is the caller's responsibility to ensure that all values passed are correct. Failure
-// to do so may result in undefined behavior.
+// The caller must ensure that the `buffer` is large enough to hold the result. For example, a base 2
+// representation of a 64-bit integer requires up to 65 characters (64 digits + null terminator).
 bool ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed);
 
 #endif
