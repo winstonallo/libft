@@ -4,7 +4,7 @@
 // Returns a pointer to the first occurence of `c` in `s`.
 // If `c` does not occur in `s`, returns a NULL pointer.
 void *
-ft_memchr(const void *s, int c, size_t n) {
+ft_memsrch(const void *s, int c, size_t n) {
     while (n != 0) {
         if (*(unsigned char *)s == (unsigned char)c) {
             return (void *)s;
