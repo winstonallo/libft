@@ -4,32 +4,30 @@
 // Returns a pointer to the first occurence of `c` in `s`.
 // If `c` does not occur in `s`, returns a NULL pointer.
 void *
-ft_memsrch(const void *s, int c, size_t n) {
+ft_memsrch(const void *haystack, int needle, size_t n) {
     while (n != 0) {
-        if (*(unsigned char *)s == (unsigned char)c) {
-            return (void *)s;
+        if (*(unsigned char *)haystack == (unsigned char)needle) {
+            return (void *)haystack;
         }
         n--;
-        s++;
+        haystack++;
     }
     return NULL;
 }
 
 short
-ft_memcmp(const void *s1, const void *s2, size_t n) {
+ft_memcmp(const void *a, const void *b, size_t n) {
     size_t i;
-    unsigned char *s11;
-    unsigned char *s22;
+    unsigned char *a0 = (unsigned char *)a;
+    unsigned char *b0 = (unsigned char *)b;
 
-    s11 = (unsigned char *)s1;
-    s22 = (unsigned char *)s2;
     i = 0;
     if (n == 0) {
         return 0;
     }
     while (i < n) {
-        if (s11[i] != s22[i]) {
-            return s11[i] - s22[i];
+        if (a0[i] != b0[i]) {
+            return a0[i] - b0[i];
         }
         i++;
     }
@@ -57,14 +55,15 @@ ft_memcpy(void *dest, const void *src, size_t n) {
 }
 
 void *
-ft_memset(void *s, int x, size_t n) {
-    unsigned char *p;
+ft_memset(void *dest, int c, size_t n) {
+    unsigned char *tmp;
 
-    p = (unsigned char *)s;
+    tmp = (unsigned char *)dest;
     while (n--) {
-        *p++ = (unsigned char)x;
+        *tmp++ = (unsigned char)c;
     }
-    return s;
+
+    return dest;
 }
 
 void *
@@ -76,13 +75,15 @@ ft_memmove(void *dest, const void *src, size_t n) {
     csrc = src;
     if (!dest && !src)
         return NULL;
-    if (dest < src)
+
+    if (dest < src) {
         ft_memcpy(dest, src, n);
-    else {
+    } else {
         while (n != 0) {
             n--;
             cdst[n] = csrc[n];
         }
     }
+
     return dest;
 }
