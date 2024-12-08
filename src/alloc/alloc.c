@@ -5,6 +5,7 @@
 __attribute__((warn_unused_result)) void *
 ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
     if (bytes_new < bytes_old) {
+        errno = EINVAL;
         return NULL;
     }
 
