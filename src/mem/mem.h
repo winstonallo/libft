@@ -2,6 +2,17 @@
 #define MEM_H
 
 #include <stddef.h>
+#include <stdint.h>
+
+#if __SIZEOF_POINTER__ == 8
+// `uint<CPU-architecture>_t`
+typedef uint64_t op_t;
+#else
+// `uint<CPU-architecture>_t`
+typedef uint32_t op_t;
+#endif
+
+#define OPTSIZ sizeof(op_t)
 
 // Returns a pointer to the first occurence of `needle` in the first `n_bytes` of `haystack`.
 // If nothing is found, returns a NULL pointer.
@@ -11,7 +22,7 @@ void *ft_memsrch(const void *haystack, int needle, size_t n_bytes);
 // or a non-zero u8 if not.
 //
 // Safety:
-// If `a` and `b` are equal and both point to allocated regions shorter than `n_bytes`, 
+// If `a` and `b` are equal and both point to allocated regions shorter than `n_bytes`,
 // this function will access invalid memory.
 short ft_memcmp(const void *a, const void *b, size_t n_bytes);
 

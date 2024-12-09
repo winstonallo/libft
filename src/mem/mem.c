@@ -1,3 +1,4 @@
+#include "mem.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -15,19 +16,18 @@ ft_memsrch(const void *haystack, int needle, size_t n) {
 
 short
 ft_memcmp(const void *a, const void *b, size_t n) {
-    size_t i;
+    size_t idx = 0;
     unsigned char *a0 = (unsigned char *)a;
     unsigned char *b0 = (unsigned char *)b;
 
-    i = 0;
     if (n == 0) {
         return 0;
     }
-    while (i < n) {
-        if (a0[i] != b0[i]) {
-            return a0[i] - b0[i];
+    while (idx < n) {
+        if (a0[idx] != b0[idx]) {
+            return a0[idx] - b0[idx];
         }
-        i++;
+        idx++;
     }
     return 0;
 }
@@ -53,12 +53,61 @@ ft_memcpy(void *dest, const void *src, size_t n) {
 }
 
 void *
-ft_memset(void *dest, int c, size_t n) {
-    unsigned char *tmp;
+ft_memset(void *dest, int c, size_t len) {
+    long dst = (long)dest;
 
-    tmp = (unsigned char *)dest;
-    while (n--) {
-        *tmp++ = (unsigned char)c;
+    if (len >= 8) {
+
+        // Create a "fat character" of size <CPU architecture> bits, 
+        // and set all of its bytes to `c`. This allows for faster writes 
+        // than writing byte by byte.
+        op_t C;
+
+        C = (unsigned char)c;
+        C |= C << 8;
+        C |= C << 16;
+        if (OPTSIZ == 8) {
+            C |= (C << 16) << 16;
+        }
+
+        // Write single bytes until the destination pointer is aligned.
+        while (dst % OPTSIZ != 0) {
+            ((uint8_t *)dst)[0] = c;
+            ++dst;
+            --len;
+        }
+
+        size_t n_blocks = len / (OPTSIZ * 8);
+        while (n_blocks > 0) {
+            ((op_t *)dst)[0] = C;
+            ((op_t *)dst)[1] = C;
+            ((op_t *)dst)[2] = C;
+            ((op_t *)dst)[3] = C;
+            ((op_t *)dst)[4] = C;
+            ((op_t *)dst)[5] = C;
+            ((op_t *)dst)[6] = C;
+            ((op_t *)dst)[7] = C;
+
+            dst += OPTSIZ * 8;
+            --n_blocks;
+        }
+
+        len %= OPTSIZ * 8;
+
+        size_t n_remaining_u64 = len / OPTSIZ;
+        while (n_remaining_u64 > 0) {
+            ((op_t *)dst)[0] = C;
+            dst += OPTSIZ;
+            --n_remaining_u64;
+        }
+
+        len %= OPTSIZ;
+    }
+
+    while (len > 0) {
+        ((uint8_t *)dst)[0] = c;
+        ++dst;
+        --len;
     }
 
     return dest;
