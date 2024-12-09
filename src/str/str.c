@@ -8,27 +8,99 @@
 
 size_t
 ft_strlen(const char *str) {
-    size_t len;
+    const char *char_ptr;
 
-    len = 0;
-    while (*str) {
-        str++;
-        len++;
+    // Step 1: Process byte-by-byte until `char_ptr` is aligned to a word boundary.
+    //
+    // Why does the pointer need to be aligned?
+    // - Modern CPUs fetch memory in chunks (e.g., 32 or 64 bits) rather than byte-by-byte.
+    // - Starting at an unaligned address may cause additional overhead or slower fetches, because
+    //   the CPU could have to fetch twice for the same word.
+    //
+    // We iterate over the input string one byte at a time until `char_ptr` points
+    // to a memory address that is a multiple of `OPTSIZ` (the word size). Once we know it is aligned,
+    // we can process the string more efficiently.
+    for (char_ptr = str; ((op_t)char_ptr % OPTSIZ) != 0; ++char_ptr) {
+
+        // Obviously, if we find a null byte before aligment (aka the string length is less than `OPTSIZ - 1`),
+        // we return the length.
+        if (*char_ptr == '\0') {
+            return char_ptr - str;
+        }
     }
 
-    return len;
+    const op_t *op_t_ptr = (op_t *)char_ptr;
+
+    // All MSB set.
+    op_t himagic = 0x80808080L;
+    // All LSB set.
+    op_t lomagic = 0x01010101L;
+
+    if (OPTSIZ > 4) {
+        // 64-bit architecture, extend magic numbers.
+        himagic = ((himagic << 16) << 16) | himagic;
+        lomagic = ((lomagic << 16) << 16) | lomagic;
+    }
+
+    for (;;) {
+        op_t lw = *op_t_ptr++;
+
+        // This condition is the magic behind the optimization. It detects NULL bytes in 32/64-bit
+        // words (depending on the CPU architecture). Instead of checking each byte individually, this
+        // approach allows scanning multiple bytes (word-sized chunks) at once, significantly
+        // reducing the number of checks needed.
+        //
+        // A written explanation can only do so much - if you still do not understand what is going on here,
+        // take a pen and paper and calculate it by hand a few times, with numbers that do/do not contain null bytes.
+        // It will help you see the pattern.
+        //
+        // Step-by-step explanation:
+        // 1. `(lw - lomagic)`
+        //    - `lomagic` is `0x01010101...`, where each byte is `0x01`.
+        //    - Subtracting `lomagic` from `lw` decreases each byte in `lw` by 1.
+        //    - If a byte in `lw` was `0x00`, it underflows to `0xFF`.
+        //
+        // 2. `~lw`
+        //    - Bitwise NOT of `lw`. Bytes with `0x00` in `lw` become `0xFF`.
+        //
+        // 3. `& ~lw & himagic`
+        //    - `himagic` is `0x80808080...`, where the most significant bit (MSB) of each byte
+        //      is set.
+        //    - This step isolates bytes in `lw` where:
+        //      a. Subtraction resulted in `0xFF` (from the null byte in `lw`).
+        //      b. The MSB is set due to the underflow.
+        //    - When a match is found, the condition evaluates to true.
+        //
+        // Purpose:
+        // - This avoids reading each byte sequentially and focuses on the word containing the null byte.
+        // - It effectively reduces the number of memory and CPU operations by 4x (for 32-bit)
+        //   or 8x (for 64-bit).
+        //
+        // If this condition evaluates to true, we know a null byte exists in the current word. To find
+        // its exact position, we iterate over it until we find the null byte.
+        if (((lw - lomagic) & ~lw & himagic) != 0) {
+            const char *char_block_ptr = (const char *)(op_t_ptr - 1);
+
+            for (size_t i = 0; i < sizeof(op_t); i++) {
+                if (char_block_ptr[i] == '\0') {
+                    return char_block_ptr + i - str;
+                }
+            }
+        }
+    }
 }
 
 char *
 ft_substr(char const *str, unsigned int start, size_t len) {
     char *dest;
+    size_t str_len = ft_strlen(str);
 
-    if (start >= ft_strlen(str)) {
+    if (start >= str_len) {
         return (ft_calloc(1, sizeof(char)));
     }
 
-    if (ft_strlen(str + start) < len) {
-        len = ft_strlen(str + start);
+    if (str_len + start < len) {
+        len = str_len + start;
     }
 
     dest = malloc((len + 1) * sizeof(char));

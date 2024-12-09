@@ -1,5 +1,5 @@
 CC = cc
-BLOCK_SIZE=$(stat -fc %s .)
+BLOCK_SIZE=$(shell stat -fc %s .)
 
 CFLAGS = -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -Isrc/alloc -Isrc/mem -Isrc/print -Isrc/str -Isrc/char -g
 
@@ -20,14 +20,21 @@ OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 NAME = libft.a
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re b
 
 all: $(OBJ_DIR) $(NAME)
+	echo 
+	echo 
+	echo 
+	echo 
+	echo 
+	echo ${BLOCK_SIZE}
 
 clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
+	echo ${BLOCK_SIZE}
 	rm -f $(NAME)
 
 re: fclean all
