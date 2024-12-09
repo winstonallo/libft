@@ -1,0 +1,2 @@
+# LIBFT
+Reinventing the wheel..
