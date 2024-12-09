@@ -10,10 +10,10 @@ size_t
 ft_strlen(const char *str) {
     const char *char_ptr;
 
-    // Step 1: Process byte-by-byte until `char_ptr` is aligned to a word boundary.
+    // Process `str` byte-by-byte until `char_ptr` is aligned to a word boundary.
     //
     // Why does the pointer need to be aligned?
-    // - Modern CPUs fetch memory in chunks (e.g., 32 or 64 bits) rather than byte-by-byte.
+    // - CPUs fetch memory in chunks (32 or 64 bits) rather than byte-by-byte.
     // - Starting at an unaligned address may cause additional overhead or slower fetches, because
     //   the CPU could have to fetch twice for the same word.
     //
@@ -22,7 +22,7 @@ ft_strlen(const char *str) {
     // we can process the string more efficiently.
     for (char_ptr = str; ((op_t)char_ptr % OPTSIZ) != 0; ++char_ptr) {
 
-        // Obviously, if we find a null byte before aligment (aka the string length is less than `OPTSIZ - 1`),
+        // If we find a null byte before aligment (aka the string length is less than `OPTSIZ - 1`),
         // we return the length.
         if (*char_ptr == '\0') {
             return char_ptr - str;
@@ -71,21 +71,32 @@ ft_strlen(const char *str) {
         //      b. The MSB is set due to the underflow.
         //    - When a match is found, the condition evaluates to true.
         //
-        // Purpose:
-        // - This avoids reading each byte sequentially and focuses on the word containing the null byte.
-        // - It effectively reduces the number of memory and CPU operations by 4x (for 32-bit)
-        //   or 8x (for 64-bit).
-        //
         // If this condition evaluates to true, we know a null byte exists in the current word. To find
         // its exact position, we iterate over it until we find the null byte.
         if (((lw - lomagic) & ~lw & himagic) != 0) {
             const char *char_block_ptr = (const char *)(op_t_ptr - 1);
 
-            for (size_t i = 0; i < sizeof(op_t); i++) {
-                if (char_block_ptr[i] == '\0') {
-                    return char_block_ptr + i - str;
-                }
+            if (char_block_ptr[0] == '\0') {
+                return char_block_ptr - str;
+            } else if (char_block_ptr[1] == '\0') {
+                return char_block_ptr + 1 - str;
+            } else if (char_block_ptr[2] == '\0') {
+                return char_block_ptr + 2 - str;
+            } else if (char_block_ptr[3] == '\0') {
+                return char_block_ptr + 3 - str;
             }
+
+#if __SIZEOF_POINTER == 8
+            if (char_block_ptr[4] == '\0') {
+                return char_block_ptr + 4 - str;
+            } else if (char_block_ptr[5] == '\0') {
+                return char_block_ptr + 5 - str;
+            } else if (char_block_ptr[6] == '\0') {
+                return char_block_ptr + 6 - str;
+            } else if (char_block_ptr[7] == '\0') {
+                return char_block_ptr + 7 - str;
+            }
+#endif
         }
     }
 }

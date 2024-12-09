@@ -58,25 +58,25 @@ ft_memset(void *dest, int c, size_t len) {
 
     if (len >= 8) {
 
-        // Create a "fat character" of size <CPU architecture> bits, 
-        // and set all of its bytes to `c`. This allows for faster writes 
-        // than writing byte by byte.
-        op_t C;
-
-        C = (unsigned char)c;
+        // Create a "fat character" of size OPTSIZ bits, and set all of its bytes to `c`.
+        op_t C = (uint8_t)c;
         C |= C << 8;
         C |= C << 16;
         if (OPTSIZ == 8) {
             C |= (C << 16) << 16;
         }
 
-        // Write single bytes until the destination pointer is aligned.
+        // Align the destination pointer to the word size (OPTSIZ).
         while (dst % OPTSIZ != 0) {
             ((uint8_t *)dst)[0] = c;
             ++dst;
             --len;
         }
 
+        // Now that the pointer is aligned, we can bring out the big guns -
+        // spam `c` as fat characters, 8 at a time.
+        // Writing in blocks reduces loop iterations and takes advantage of
+        // memory bandwidth.
         size_t n_blocks = len / (OPTSIZ * 8);
         while (n_blocks > 0) {
             ((op_t *)dst)[0] = C;
