@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 void *
-ft_memsrch(const void *haystack, int needle, size_t n) {
+ft_memsrch(const void *haystack, int needle, uint64_t n) {
     while (n != 0) {
         if (*(unsigned char *)haystack == (unsigned char)needle) {
             return (void *)haystack;
@@ -15,8 +15,8 @@ ft_memsrch(const void *haystack, int needle, size_t n) {
 }
 
 short
-ft_memcmp(const void *a, const void *b, size_t n) {
-    size_t idx = 0;
+ft_memcmp(const void *a, const void *b, uint64_t n) {
+    uint64_t idx = 0;
     unsigned char *a0 = (unsigned char *)a;
     unsigned char *b0 = (unsigned char *)b;
 
@@ -33,7 +33,7 @@ ft_memcmp(const void *a, const void *b, size_t n) {
 }
 
 void *
-ft_memcpy(void *dest, const void *src, size_t n) {
+ft_memcpy(void *dest, const void *src, uint64_t n) {
     if (!dest && !src) {
         return NULL;
     }
@@ -41,7 +41,7 @@ ft_memcpy(void *dest, const void *src, size_t n) {
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__)
     __asm__ __volatile__("rep movsb" : : "S"(src), "D"(dest), "c"(n) : "memory");
 #else
-    size_t i = 0;
+    uint64_t i = 0;
 
     while (i < n) {
         ((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
@@ -53,7 +53,7 @@ ft_memcpy(void *dest, const void *src, size_t n) {
 }
 
 void *
-ft_memset(void *dest, int c, size_t len) {
+ft_memset(void *dest, int c, uint64_t len) {
     long dst = (long)dest;
 
     if (len >= 8) {
@@ -77,7 +77,7 @@ ft_memset(void *dest, int c, size_t len) {
         // spam `c` as fat characters, 8 at a time.
         // Writing in blocks reduces loop iterations and takes advantage of
         // memory bandwidth.
-        size_t n_blocks = len / (OPTSIZ * 8);
+        uint64_t n_blocks = len / (OPTSIZ * 8);
         while (n_blocks > 0) {
             ((op_t *)dst)[0] = C;
             ((op_t *)dst)[1] = C;
@@ -94,7 +94,7 @@ ft_memset(void *dest, int c, size_t len) {
 
         len %= OPTSIZ * 8;
 
-        size_t n_remaining_u64 = len / OPTSIZ;
+        uint64_t n_remaining_u64 = len / OPTSIZ;
         while (n_remaining_u64 > 0) {
             ((op_t *)dst)[0] = C;
             dst += OPTSIZ;

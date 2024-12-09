@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-size_t
+uint64_t
 ft_strlen(const char *str) {
     const char *char_ptr;
 
@@ -36,11 +36,11 @@ ft_strlen(const char *str) {
     // All LSB set.
     op_t lomagic = 0x01010101L;
 
-    if (OPTSIZ > 4) {
-        // 64-bit architecture, extend magic numbers.
-        himagic = ((himagic << 16) << 16) | himagic;
-        lomagic = ((lomagic << 16) << 16) | lomagic;
-    }
+#if __SIZEOF_POINTER == 8
+    // 64-bit architecture, extend magic numbers.
+    himagic = ((himagic << 16) << 16) | himagic;
+    lomagic = ((lomagic << 16) << 16) | lomagic;
+#endif
 
     for (;;) {
         op_t lw = *op_t_ptr++;
@@ -49,10 +49,6 @@ ft_strlen(const char *str) {
         // words (depending on the CPU architecture). Instead of checking each byte individually, this
         // approach allows scanning multiple bytes (word-sized chunks) at once, significantly
         // reducing the number of checks needed.
-        //
-        // A written explanation can only do so much - if you still do not understand what is going on here,
-        // take a pen and paper and calculate it by hand a few times, with numbers that do/do not contain null bytes.
-        // It will help you see the pattern.
         //
         // Step-by-step explanation:
         // 1. `(lw - lomagic)`
@@ -73,6 +69,10 @@ ft_strlen(const char *str) {
         //
         // If this condition evaluates to true, we know a null byte exists in the current word. To find
         // its exact position, we iterate over it until we find the null byte.
+        //
+        // A written explanation can only do so much - if you still do not understand what is going on here,
+        // take a pen and paper and calculate it by hand a few times, with numbers that do/do not contain null bytes.
+        // It will help you see the pattern.
         if (((lw - lomagic) & ~lw & himagic) != 0) {
             const char *char_block_ptr = (const char *)(op_t_ptr - 1);
 
@@ -102,9 +102,9 @@ ft_strlen(const char *str) {
 }
 
 char *
-ft_substr(char const *str, unsigned int start, size_t len) {
+ft_substr(char const *str, unsigned int start, uint64_t len) {
     char *dest;
-    size_t str_len = ft_strlen(str);
+    uint64_t str_len = ft_strlen(str);
 
     if (start >= str_len) {
         return (ft_calloc(1, sizeof(char)));
@@ -130,7 +130,7 @@ ft_strtrim(char const *str, char const *set) {
         return NULL;
     }
 
-    size_t len = ft_strlen(str);
+    uint64_t len = ft_strlen(str);
 
     if (!set || set[0] == '\0') {
         return ft_memdup(str, len + 1);
@@ -147,7 +147,7 @@ ft_strtrim(char const *str, char const *set) {
         end--;
     }
 
-    size_t new_len = end >= start ? (end - start + 1) : 0;
+    uint64_t new_len = end >= start ? (end - start + 1) : 0;
 
     char *res = malloc(new_len + 1);
     if (!res) {
@@ -173,8 +173,8 @@ ft_strjoin(char *a, char *b) {
         a[0] = '\0';
     }
 
-    size_t a_len = ft_strlen(a);
-    size_t b_len = ft_strlen(b);
+    uint64_t a_len = ft_strlen(a);
+    uint64_t b_len = ft_strlen(b);
 
     char *dest = malloc((a_len + b_len + 1) * sizeof(char));
     if (!dest) {
@@ -191,7 +191,7 @@ ft_strjoin(char *a, char *b) {
 __attribute__((always_inline)) static inline char **
 free_array(char **arr) {
 
-    for (size_t i = 0; arr[i]; ++i) {
+    for (uint64_t i = 0; arr[i]; ++i) {
         free(arr[i]);
     }
 
@@ -199,9 +199,9 @@ free_array(char **arr) {
     return (NULL);
 }
 
-__attribute__((always_inline)) static inline size_t
+__attribute__((always_inline)) static inline uint64_t
 count_words(const char *str, char delimiter) {
-    size_t words = 0;
+    uint64_t words = 0;
     bool in_word = 0;
 
     while (*str) {
@@ -222,14 +222,14 @@ ft_split(char const *str, char delimiter) {
         return NULL;
     }
 
-    size_t word_count = count_words(str, delimiter);
+    uint64_t word_count = count_words(str, delimiter);
 
     char **res = malloc(sizeof(char *) * (word_count + 1));
     if (!res) {
         return NULL;
     }
 
-    size_t idx = 0;
+    uint64_t idx = 0;
     while (*str) {
         while (*str == delimiter) {
             str++;
@@ -240,7 +240,7 @@ ft_split(char const *str, char delimiter) {
         }
 
         const char *word_start = str;
-        size_t word_len = 0;
+        uint64_t word_len = 0;
         while (*str && *str != delimiter) {
             word_len++;
             str++;
@@ -260,9 +260,9 @@ ft_split(char const *str, char delimiter) {
 }
 
 char *
-ft_strnstr(const char *haystack, const char *needle, size_t n_bytes) {
-    size_t h_idx = 0;
-    size_t n_idx = 0;
+ft_strnstr(const char *haystack, const char *needle, uint64_t n_bytes) {
+    uint64_t h_idx = 0;
+    uint64_t n_idx = 0;
 
     if (needle[0] == '\0') {
         return (char *)haystack;
@@ -287,7 +287,7 @@ ft_strnstr(const char *haystack, const char *needle, size_t n_bytes) {
 
 char *
 ft_tolower(char *str) {
-    for (size_t idx = 0; str[idx]; ++idx) {
+    for (uint64_t idx = 0; str[idx]; ++idx) {
         str[idx] = (str[idx] <= 'Z' && str[idx] >= 'A') ? str[idx] + 32 : str[idx];
     }
     return str;
@@ -295,7 +295,7 @@ ft_tolower(char *str) {
 
 char *
 ft_toupper(char *str) {
-    for (size_t idx = 0; str[idx]; ++idx) {
+    for (uint64_t idx = 0; str[idx]; ++idx) {
         str[idx] = (str[idx] <= 'z' && str[idx] >= 'a') ? str[idx] - 32 : str[idx];
     }
     return str;
@@ -425,7 +425,7 @@ ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_signed) {
 }
 
 __attribute__((always_inline)) static inline bool
-convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_size, bool uppercase) {
+convert_unsigned_to_str(uintmax_t value, int base, char *buffer, uint64_t buffer_size, bool uppercase) {
     if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
         errno = EINVAL;
         return false;
@@ -434,7 +434,7 @@ convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_s
     const char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
 
     char tmp[65];
-    size_t idx = 0;
+    uint64_t idx = 0;
 
     do {
         if (idx >= sizeof(tmp) - 1) {
@@ -450,7 +450,7 @@ convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_s
         return false;
     }
 
-    for (size_t i = 0; i < idx; ++i) {
+    for (uint64_t i = 0; i < idx; ++i) {
         buffer[i] = tmp[idx - i - 1];
     }
     buffer[idx] = '\0';
@@ -458,7 +458,7 @@ convert_unsigned_to_str(uintmax_t value, int base, char *buffer, size_t buffer_s
 }
 
 __attribute__((always_inline)) static inline bool
-convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size, bool uppercase) {
+convert_signed_to_str(intmax_t value, int base, char *buffer, uint64_t buffer_size, bool uppercase) {
     if (base < 2 || base > 16 || !buffer || buffer_size == 0) {
         errno = EINVAL;
         return false;
@@ -472,7 +472,7 @@ convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size
     }
 
     if (negative) {
-        size_t len = ft_strlen(buffer);
+        uint64_t len = ft_strlen(buffer);
         if (len + 1 >= buffer_size) {
             errno = ERANGE;
             return false;
@@ -485,7 +485,7 @@ convert_signed_to_str(intmax_t value, int base, char *buffer, size_t buffer_size
 }
 
 bool
-ft_btoa(void *value, int base, int bits, char *buffer, size_t buffer_size, bool is_signed, bool uppercase) {
+ft_btoa(void *value, int base, int bits, char *buffer, uint64_t buffer_size, bool is_signed, bool uppercase) {
     if (!value || !buffer || buffer_size == 0 || base < 2 || base > 16 || (bits != 8 && bits != 16 && bits != 32 && bits != 64)) {
         errno = EINVAL;
         return false;

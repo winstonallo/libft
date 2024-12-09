@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 __attribute__((warn_unused_result)) void *
-ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
+ft_realloc(void *old_buf, uint64_t bytes_new, uint64_t bytes_old) {
     if (bytes_new < bytes_old) {
         errno = EINVAL;
         return NULL;
@@ -22,7 +22,7 @@ ft_realloc(void *old_buf, size_t bytes_new, size_t bytes_old) {
 }
 
 __attribute__((warn_unused_result)) void *
-ft_calloc(size_t nmemb, size_t size) {
+ft_calloc(uint64_t nmemb, uint64_t size) {
     void *dest;
 
     dest = NULL;
@@ -45,7 +45,7 @@ ft_calloc(size_t nmemb, size_t size) {
 }
 
 __attribute__((warn_unused_result)) void *
-ft_memdup(const void *src, const size_t bytes) {
+ft_memdup(const void *src, const uint64_t bytes) {
     char *dest;
 
     dest = (char *)malloc(bytes);

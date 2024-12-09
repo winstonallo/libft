@@ -12,7 +12,7 @@
 #endif
 
 static void
-flush_if_full(const char *const buf, uint16_t *idx, size_t len_to_write, ssize_t *result, int fd) {
+flush_if_full(const char *const buf, uint16_t *idx, uint64_t len_to_write, ssize_t *result, int fd) {
     if (*idx + len_to_write >= FS_BLOCK_SIZE) {
         *result = write(fd, buf, *idx);
         *idx = 0;
@@ -20,7 +20,7 @@ flush_if_full(const char *const buf, uint16_t *idx, size_t len_to_write, ssize_t
 }
 
 static void
-write_to_buf(char *const buf, const char *const src, size_t len, uint16_t *idx, int fd) {
+write_to_buf(char *const buf, const char *const src, uint64_t len, uint16_t *idx, int fd) {
     ssize_t result = 0;
     flush_if_full(buf, idx, len, &result, fd);
 
