@@ -1,10 +1,13 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Isrc/alloc -Isrc/mem -Isrc/print -Isrc/str -Isrc/char -g
+BLOCK_SIZE=$(stat -fc %s .)
+
+CFLAGS = -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -Isrc/alloc -Isrc/mem -Isrc/print -Isrc/str -Isrc/char -g
 
 LIBFT_FLAGS = -L./libft -lft
 
 SRC_DIR = src
 OBJ_DIR = obj
+
 
 SRCS =  ${SRC_DIR}/alloc/alloc.c \
         ${SRC_DIR}/mem/mem.c \
