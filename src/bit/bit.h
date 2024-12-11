@@ -3,10 +3,8 @@
 
 #include <stdint.h>
 
-// Rotates `val` to the left by `by` bits.
-uint32_t rotl_32(uint32_t val, uint32_t by);
+#define ROTL_32(val, by) (((by) & 31) == 0 ? (val) : ((val) << ((by) & 31)) | ((val) >> (32 - ((by) & 31))))
 
-// Rotates `val` to the right by `by` bits.
-uint32_t rotr_32(uint32_t val, uint32_t by);
+#define ROTR_32(val, by) (((by) & 31) == 0 ? (val) : ((val) >> ((by) & 31)) | ((val) << (32 - ((by) & 31))))
 
 #endif

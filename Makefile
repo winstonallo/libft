@@ -1,13 +1,20 @@
 CC = cc
 BLOCK_SIZE=$(shell stat -fc %s .)
 
-CFLAGS = -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -Isrc/alloc -Isrc/mem -Isrc/print -Isrc/str -Isrc/char -g
 
 LIBFT_FLAGS = -L./libft -lft
 
 SRC_DIR = src
 OBJ_DIR = obj
 
+CFLAGS = -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
+    -I$(PWD)/libft//src \
+    -I$(PWD)/libft//src/mem \
+    -I$(PWD)/libft//src/alloc \
+    -I$(PWD)/libft//src/print \
+    -I$(PWD)/libft//src/str \
+    -I$(PWD)/libft//src/char \
+    -g
 
 SRCS =  ${SRC_DIR}/alloc/alloc.c \
         ${SRC_DIR}/mem/mem.c \
@@ -23,12 +30,6 @@ NAME = libft.a
 .PHONY: all clean fclean re b
 
 all: $(OBJ_DIR) $(NAME)
-	echo 
-	echo 
-	echo 
-	echo 
-	echo 
-	echo ${BLOCK_SIZE}
 
 clean:
 	rm -rf $(OBJ_DIR)
