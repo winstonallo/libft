@@ -1,3 +1,4 @@
+#include "print.h"
 #include "mem.h"
 #include "str.h"
 #include <stdarg.h>
@@ -35,6 +36,7 @@ distribute_args(int fd, const char *s, void *arg, char *buf, uint16_t *idx) {
     if (*s == 's') {
 
         char *str = (char *)arg;
+
         write_to_buf(buf, str, ft_strlen(str), idx, fd);
 
     } else if (*s == 'c') {
@@ -94,7 +96,7 @@ ft_printf(int fd, const char *s, ...) {
     va_list args;
     va_start(args, s);
 
-    char buf[FS_BLOCK_SIZE];
+    char buf[FS_BLOCK_SIZE] = {0};
     uint16_t buf_idx = 0;
 
     while (*s) {

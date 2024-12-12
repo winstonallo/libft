@@ -36,7 +36,7 @@ ft_strlen(const char *str) {
     // All LSB set.
     op_t lomagic = 0x01010101L;
 
-#if __SIZEOF_POINTER == 8
+#if __SIZEOF_POINTER__ == 8
     // 64-bit architecture, extend magic numbers.
     himagic = ((himagic << 16) << 16) | himagic;
     lomagic = ((lomagic << 16) << 16) | lomagic;
@@ -86,7 +86,7 @@ ft_strlen(const char *str) {
                 return char_block_ptr + 3 - str;
             }
 
-#if __SIZEOF_POINTER == 8
+#if __SIZEOF_POINTER__ == 8
             if (char_block_ptr[4] == '\0') {
                 return char_block_ptr + 4 - str;
             } else if (char_block_ptr[5] == '\0') {
