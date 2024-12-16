@@ -4,8 +4,8 @@ BLOCK_SIZE=$(shell stat -fc %s .)
 
 LIBFT_FLAGS = -L./libft -lft
 
-SRC_DIR = src
-OBJ_DIR = obj
+SRC_DIR = $(PWD)/libft/src
+OBJ_DIR = $(PWD)/libft/obj
 
 CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
     -I$(PWD)/libft/src \
@@ -17,11 +17,11 @@ CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
     
 
 SRCS =  ${SRC_DIR}/alloc/alloc.c \
-        ${SRC_DIR}/mem/mem.c \
-        ${SRC_DIR}/str/str.c \
-        ${SRC_DIR}/print/print.c \
-        ${SRC_DIR}/bit/bit.c \
-        ${SRC_DIR}/char/char.c \
+		${SRC_DIR}/mem/mem.c \
+		${SRC_DIR}/str/str.c \
+		${SRC_DIR}/print/print.c \
+		${SRC_DIR}/bit/bit.c \
+		${SRC_DIR}/char/char.c \
 
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
@@ -35,7 +35,6 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	echo ${BLOCK_SIZE}
 	rm -f $(NAME)
 
 re: fclean all
