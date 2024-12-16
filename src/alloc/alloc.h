@@ -14,6 +14,10 @@ void *ft_realloc(void *old_buf, uint64_t bytes_new, uint64_t bytes_old) __attrib
 // result in a `uint64_t` overflow.
 void *ft_calloc(uint64_t nmemb, uint64_t size) __attribute__((warn_unused_result));
 
+void *ft_calloc_aligned(uint64_t nmemb, uint64_t size, uint8_t alignment);
+
+void ft_free_aligned(void *ptr);
+
 // Returns a heap-allocated duplicate of `src`.
 // Returns NULL on malloc failure.
 void *ft_memdup(const void *src, const uint64_t bytes) __attribute__((warn_unused_result));

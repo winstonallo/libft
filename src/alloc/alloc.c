@@ -1,5 +1,7 @@
+
 #include <errno.h>
 #include <mem.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 __attribute__((warn_unused_result)) void *
@@ -42,6 +44,44 @@ ft_calloc(uint64_t nmemb, uint64_t size) {
 
     ft_memset(dest, 0, size * nmemb);
     return dest;
+}
+
+__attribute__((warn_unused_result)) void *
+ft_calloc_aligned(uint64_t nmemb, uint64_t size, uint8_t alignment) {
+
+    if (nmemb == 0 || size == 0) {
+        return malloc(0);
+    }
+
+    if ((size * nmemb) / nmemb != size) {
+        errno = ERANGE;
+        return NULL;
+    }
+
+    uint64_t total_size = nmemb * size + alignment + sizeof(void *);
+
+    void *raw_ptr = malloc(total_size);
+
+    raw_ptr = malloc(total_size);
+    if (!raw_ptr) {
+        return NULL;
+    }
+
+    uintptr_t address = (uintptr_t)raw_ptr + sizeof(void *);
+    void *aligned_ptr = (void *)((address + alignment - 1) & ~(alignment - 1));
+
+    ((void **)aligned_ptr)[-1] = raw_ptr;
+
+    ft_memset(aligned_ptr, 0, nmemb * size);
+    return aligned_ptr;
+}
+
+void
+ft_free_aligned(void *ptr) {
+    if (ptr) {
+        void *raw_ptr = ((void **)ptr)[-1];
+        free(raw_ptr);
+    }
 }
 
 __attribute__((warn_unused_result)) void *
