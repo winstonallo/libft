@@ -7,7 +7,7 @@ LIBFT_FLAGS = -L./libft -lft
 SRC_DIR = src
 OBJ_DIR = obj
 
-CFLAGS = -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
+CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
     -I$(PWD)/libft/src \
     -I$(PWD)/libft/src/mem \
     -I$(PWD)/libft/src/alloc \
