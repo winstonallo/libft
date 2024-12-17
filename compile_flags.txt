@@ -4,6 +4,7 @@
 -Isrc/print
 -Isrc/char
 -Isrc/bit
+-Isrc/map
 -Wall
 -Wextra
 -Werror
