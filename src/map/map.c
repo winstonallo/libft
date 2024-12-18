@@ -100,6 +100,7 @@ resize_and_rehash(Map *map) {
     map->n_entries = 0;
 
     for (uint32_t i = 0; i < old_size; i++) {
+
         if (old_buckets[i].key != NULL) {
             int x = map_insert(map, old_buckets[i].key, old_buckets[i].content);
             (void)x;
