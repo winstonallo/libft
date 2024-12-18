@@ -23,6 +23,8 @@ murmur3_32_scramble(uint32_t k) {
 // distribution properties.
 //
 // Hash output will differ based on endianness, but this does not change hash properties.
+//
+// https://en.wikipedia.org/wiki/MurmurHash
 __attribute__((always_inline)) static inline uint32_t
 murmur3_32(const uint8_t *key, uint64_t len) {
     uint32_t h = 0;
@@ -60,13 +62,13 @@ murmur3_32(const uint8_t *key, uint64_t len) {
 // A high load factor will be more space efficient, but insertions/lookup
 // will take longer, and vice versa.
 __attribute__((always_inline)) static inline bool
-max_load_factor_reached(Map *map) {
+max_load_factor_reached(HashMap *map) {
     return (float)map->n_entries / (float)map->n_buckets >= MAX_LOAD_FACTOR;
 }
 
-__attribute__((warn_unused_result)) Map *
+__attribute__((warn_unused_result)) HashMap *
 map_new(uint32_t size) {
-    Map *map = malloc(sizeof(Map));
+    HashMap *map = malloc(sizeof(HashMap));
     if (!map) {
         ft_printf(STDERR_FILENO, "map_new: could not allocate new map: %s\n", strerror(errno));
         return NULL;
@@ -86,7 +88,7 @@ map_new(uint32_t size) {
 }
 
 __attribute__((warn_unused_result, always_inline)) static inline int
-resize_and_rehash(Map *map) {
+resize_and_rehash(HashMap *map) {
     Bucket *old_buckets = map->buckets;
     uint32_t old_size = map->n_buckets;
 
@@ -116,7 +118,7 @@ resize_and_rehash(Map *map) {
 // Safety:
 // - `key` is assumed to be a valid, null-terminated string.
 __attribute__((warn_unused_result)) int
-map_insert(Map *map, const char *key, void *content) {
+map_insert(HashMap *map, const char *key, void *content) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
     while (map->buckets[idx].key != NULL) {
@@ -145,7 +147,7 @@ map_insert(Map *map, const char *key, void *content) {
 // - For performance reasons, the responsibility of freeing any allocated memory for
 // the content or the key is left to the caller
 __attribute__((warn_unused_result)) int
-map_delete_key(Map *map, const char *key) {
+map_delete_key(HashMap *map, const char *key) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
     uint32_t tries = 0;
@@ -166,7 +168,7 @@ map_delete_key(Map *map, const char *key) {
 }
 
 void
-map_delete(Map *map) {
+map_delete(HashMap *map) {
     free(map->buckets);
     free(map);
 }
@@ -176,7 +178,7 @@ map_delete(Map *map) {
 // Errors:
 // - `EINVAL` and `-1`: If `key` is not found in the map.
 __attribute__((warn_unused_result)) void *
-map_get(Map *map, const char *key) {
+map_get(HashMap *map, const char *key) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
     for (uint32_t tries = 0; tries < map->n_buckets; ++tries) {
