@@ -8,20 +8,22 @@ SRC_DIR = $(PWD)/libft/src
 OBJ_DIR = $(PWD)/libft/obj
 
 CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
-    -I$(PWD)/libft/src \
-    -I$(PWD)/libft/src/mem \
-    -I$(PWD)/libft/src/alloc \
-    -I$(PWD)/libft/src/print \
-    -I$(PWD)/libft/src/str \
-    -I$(PWD)/libft/src/char
-    
+	-I./src \
+	-I./src/mem \
+	-I./src/alloc \
+	-I./src/print \
+	-I./src/str \
+	-I./src/char \
+	-I./src/map
 
-SRCS =  ${SRC_DIR}/alloc/alloc.c \
-		${SRC_DIR}/mem/mem.c \
-		${SRC_DIR}/str/str.c \
-		${SRC_DIR}/print/print.c \
-		${SRC_DIR}/bit/bit.c \
-		${SRC_DIR}/char/char.c \
+
+SRCS =  ./src/alloc/alloc.c \
+		./src/mem/mem.c \
+		./src/str/str.c \
+		./src/print/print.c \
+		./src/bit/bit.c \
+		./src/char/char.c \
+		./src/map/map.c \
 
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 

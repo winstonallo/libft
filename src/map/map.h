@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define MAX_LOAD_FACTOR 0.95
+#define MAX_LOAD_FACTOR 0.8
 
 typedef struct Bucket {
     const char *key;
