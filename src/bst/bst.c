@@ -72,7 +72,7 @@ find_min(TreeNode *node) {
 TreeNode *
 tree_delete_node(TreeNode *root, const char *key) {
     if (!root) {
-        return root;
+        return NULL;
     }
 
     int diff = ft_memcmp(root->key, key, ft_strlen(key) + 1);
@@ -82,18 +82,29 @@ tree_delete_node(TreeNode *root, const char *key) {
     } else if (diff < 0) {
         root->right = tree_delete_node(root->right, key);
     } else {
+        // Node to delete found
         if (!root->left && !root->right) {
+            // Case 1: Leaf node
             free(root);
             return NULL;
-
-        } else if (!root->left || !root->right) {
-            TreeNode *ret = (root->left) ? root->left : root->right;
+        } else if (!root->left) {
+            // Case 2: Only right child
+            TreeNode *temp = root->right;
             free(root);
-            return ret;
-
+            return temp;
+        } else if (!root->right) {
+            // Case 2: Only left child
+            TreeNode *temp = root->left;
+            free(root);
+            return temp;
         } else {
+            // Case 3: Two children
             TreeNode *successor = find_min(root->right);
-            root->key = successor->key;
+
+            // Copy the content instead of the key
+            root->content = successor->content;
+
+            // Delete the successor
             root->right = tree_delete_node(root->right, successor->key);
         }
     }
@@ -106,6 +117,7 @@ tree_search_node(TreeNode *root, const char *key) {
     if (!root) {
         return root;
     }
+
     short diff = ft_memcmp(root->key, key, ft_strlen(key) + 1);
     if (diff > 0) {
         return tree_search_node(root->left, key);

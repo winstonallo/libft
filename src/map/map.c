@@ -24,9 +24,9 @@ murmur3_32_scramble(uint32_t k) {
 
 // Murmur3 *non-cryptographic* hash function. Used in hash tables for its good
 // distribution properties.
-//
+// .
 // Hash output will differ based on endianness, but this does not change hash properties.
-//
+// .
 // https://en.wikipedia.org/wiki/MurmurHash
 __attribute__((always_inline)) static inline uint32_t
 murmur3_32(const uint8_t *key, uint64_t len) {
@@ -65,7 +65,7 @@ murmur3_32(const uint8_t *key, uint64_t len) {
 // A high load factor will be more space efficient, but insertions/lookup
 // will take longer, and vice versa.
 __attribute__((always_inline)) static inline bool
-hashmap_load_factor_reached(HashMap *map) {
+max_load_factor_reached(HashMap *map) {
     return (float)map->n_entries / (float)map->n_buckets >= HASHMAP_MAX_LOAD_FACTOR;
 }
 
@@ -145,7 +145,7 @@ map_insert(HashMap *map, const char *key, void *content) {
 
 #endif
 
-    if (hashmap_load_factor_reached(map) && resize_and_rehash(map) == -1) {
+    if (max_load_factor_reached(map) && resize_and_rehash(map) == -1) {
         return -1;
     }
 
@@ -180,13 +180,8 @@ map_delete_key(HashMap *map, const char *key) {
 
 #elif HASHMAP_COLLISION_RESOLUTION == BINARY_SEARCH_TREE
 
-    TreeNode *new_root = tree_delete_node(map->buckets[idx].collision_tree, key);
-    if (!new_root) {
-        errno = ENOENT;
-        return 0;
-    }
+    map->buckets[idx].collision_tree = tree_delete_node(map->buckets[idx].collision_tree, key);
 
-    map->buckets[idx].collision_tree = new_root;
     --map->n_entries;
 
 #endif
