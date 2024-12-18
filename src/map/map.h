@@ -8,13 +8,20 @@
 typedef struct Bucket {
     const char *key;
     void *content;
-    struct Bucket *next;
 } Bucket;
 
 typedef struct Map {
-    Bucket **buckets;
+    Bucket *buckets;
     uint32_t n_entries;
     uint32_t n_buckets;
 } Map;
+
+// Looks up `key` in `map`, returns a `void *` to its content if found, else
+// NULL.
+void *map_get(Map *map, const char *key);
+int map_delete_key(Map *map, const char *key);
+int map_insert(Map *map, const char *key, void *content);
+Map *map_new(uint32_t size);
+void map_delete(Map *map);
 
 #endif
