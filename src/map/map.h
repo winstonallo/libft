@@ -1,21 +1,37 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <bst.h>
 #include <stdint.h>
 
-#ifndef MAX_LOAD_FACTOR
-#define MAX_LOAD_FACTOR 0.8
+#ifndef HASHMAP_MAX_LOAD_FACTOR
+#define HASHMAP_MAX_LOAD_FACTOR 0.8
+#endif
+
+#define LINEAR_PROBING 1
+#define BINARY_SEARCH_TREE 2
+
+#ifndef HASHMAP_COLLISION_RESOLUTION
+#define HASHMAP_COLLISION_RESOLUTION BINARY_SEARCH_TREE
 #endif
 
 typedef struct Bucket {
+
+#if HASHMAP_COLLISION_RESOLUTION == LINEAR_PROBING
     const char *key;
     void *content;
+
+#else
+    TreeNode *collision_tree;
+
+#endif
+
 } Bucket;
 
 // Hash table implemenation to store `void *` content along with `const char *` keys.
 // .
 // The map will self-resize as soon as the load factor (`n_entries / n_buckets`) reaches the default value of `0.8`. The
-// default value can be overridden at compile time with `-DMAX_LOAD_FACTOR=<load factor>`.
+// default value can be overridden at compile time with `-DHASHMAP_MAX_LOAD_FACTOR=<load factor>`.
 // The resizing logic is a simple exponential backoff.
 // .
 // Collision resolution is made using linear probing.

@@ -1,3 +1,4 @@
+#include "bst.h"
 #include <alloc.h>
 #include <errno.h>
 #include <map.h>
@@ -13,9 +14,11 @@
 
 __attribute__((always_inline)) static inline uint32_t
 murmur3_32_scramble(uint32_t k) {
+
     k *= 0xcc9e2d51;
     k = (k << 15) | (k >> 17);
     k *= 0x1b873593;
+
     return k;
 }
 
@@ -62,8 +65,8 @@ murmur3_32(const uint8_t *key, uint64_t len) {
 // A high load factor will be more space efficient, but insertions/lookup
 // will take longer, and vice versa.
 __attribute__((always_inline)) static inline bool
-max_load_factor_reached(HashMap *map) {
-    return (float)map->n_entries / (float)map->n_buckets >= MAX_LOAD_FACTOR;
+hashmap_load_factor_reached(HashMap *map) {
+    return (float)map->n_entries / (float)map->n_buckets >= HASHMAP_MAX_LOAD_FACTOR;
 }
 
 __attribute__((warn_unused_result)) HashMap *
@@ -101,13 +104,13 @@ resize_and_rehash(HashMap *map) {
     map->n_buckets *= 2;
     map->n_entries = 0;
 
-    for (uint32_t i = 0; i < old_size; i++) {
+    // for (uint32_t i = 0; i < old_size; i++) {
 
-        if (old_buckets[i].key != NULL) {
-            int x = map_insert(map, old_buckets[i].key, old_buckets[i].content);
-            (void)x;
-        }
-    }
+    //     if (old_buckets[i].key != NULL) {
+    //         int x = map_insert(map, old_buckets[i].key, old_buckets[i].content);
+    //         (void)x;
+    //     }
+    // }
 
     free(old_buckets);
     return 0;
@@ -121,6 +124,8 @@ __attribute__((warn_unused_result)) int
 map_insert(HashMap *map, const char *key, void *content) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
+#if HASHMAP_COLLISION_RESOLUTION == LINEAR_PROBING
+
     while (map->buckets[idx].key != NULL) {
         idx = (idx + 1) % map->n_buckets;
     }
@@ -129,10 +134,19 @@ map_insert(HashMap *map, const char *key, void *content) {
     map->buckets[idx].content = content;
     ++map->n_entries;
 
-    if (max_load_factor_reached(map)) {
-        if (resize_and_rehash(map) == -1) {
-            return -1;
-        }
+#else
+
+    TreeNode *new_root = tree_insert(map->buckets[idx].collision_tree, key, content);
+    if (!new_root) {
+        return -1;
+    }
+
+    map->buckets[idx].collision_tree = new_root;
+
+#endif
+
+    if (hashmap_load_factor_reached(map) && resize_and_rehash(map) == -1) {
+        return -1;
     }
 
     return 0;
@@ -150,19 +164,32 @@ __attribute__((warn_unused_result)) int
 map_delete_key(HashMap *map, const char *key) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
-    uint32_t tries = 0;
+#if HASHMAP_COLLISION_RESOLUTION == LINEAR_PROBING
 
-    while (ft_memcmp(map->buckets[idx].key, key, ft_strlen(key) + 1) != 0) {
+    for (uint32_t tries = 0; tries < map->n_buckets; ++tries) {
+
+        if (map->buckets[idx].key && !ft_memcmp(map->buckets[idx].key, key, ft_strlen(key) + 1)) {
+            map->buckets[idx].key = NULL;
+            map->buckets[idx].content = NULL;
+            --map->n_entries;
+            return 0;
+        }
 
         idx = (idx + 1) % map->n_buckets;
-        if (++tries >= map->n_buckets) {
-            errno = EINVAL;
-            return -1;
-        }
     }
 
-    map->buckets[idx].key = NULL;
-    map->buckets[idx].content = NULL;
+#elif HASHMAP_COLLISION_RESOLUTION == BINARY_SEARCH_TREE
+
+    TreeNode *new_root = tree_delete_node(map->buckets[idx].collision_tree, key);
+    if (!new_root) {
+        errno = ENOENT;
+        return 0;
+    }
+
+    map->buckets[idx].collision_tree = new_root;
+    --map->n_entries;
+
+#endif
 
     return 0;
 }
@@ -179,7 +206,14 @@ map_delete(HashMap *map) {
 // - `EINVAL` and `-1`: If `key` is not found in the map.
 __attribute__((warn_unused_result)) void *
 map_get(HashMap *map, const char *key) {
+    if (!key) {
+        errno = EINVAL;
+        return NULL;
+    }
+
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
+
+#if HASHMAP_COLLISION_RESOLUTION == LINEAR_PROBING
 
     for (uint32_t tries = 0; tries < map->n_buckets; ++tries) {
 
@@ -189,6 +223,15 @@ map_get(HashMap *map, const char *key) {
 
         idx = (idx + 1) % map->n_buckets;
     }
+
+#elif HASHMAP_COLLISION_RESOLUTION == BINARY_SEARCH_TREE
+
+    TreeNode *resolved = tree_search_node(map->buckets[idx].collision_tree, key);
+    if (resolved) {
+        return resolved->content;
+    }
+
+#endif
 
     errno = EINVAL;
     return NULL;
