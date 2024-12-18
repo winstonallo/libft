@@ -10,6 +10,7 @@ CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
 	-I./src/str \
 	-I./src/char \
 	-I./src/map
+	-I./src/btree
 
 SRC_DIR = src
 OBJ_DIR = obj

@@ -5,6 +5,7 @@
 -Isrc/char
 -Isrc/bit
 -Isrc/map
+-Isrc/btree
 -Wall
 -Wextra
 -Werror
