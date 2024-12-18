@@ -178,16 +178,15 @@ __attribute__((warn_unused_result)) void *
 map_get(Map *map, const char *key) {
     uint32_t idx = murmur3_32((uint8_t *)key, ft_strlen((char *)key)) % map->n_buckets;
 
-    uint32_t tries = 0;
+    for (uint32_t tries = 0; tries < map->n_buckets; ++tries) {
 
-    while (ft_memcmp(map->buckets[idx].key, key, ft_strlen(key) + 1) != 0) {
+        if (map->buckets[idx].key && !ft_memcmp(map->buckets[idx].key, key, ft_strlen(key) + 1)) {
+            return map->buckets[idx].content;
+        }
 
         idx = (idx + 1) % map->n_buckets;
-        if (++tries >= map->n_buckets) {
-            errno = EINVAL;
-            return NULL;
-        }
     }
 
-    return map->buckets[idx].content;
+    errno = EINVAL;
+    return NULL;
 }
