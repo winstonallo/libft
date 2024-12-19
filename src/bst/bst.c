@@ -82,29 +82,23 @@ tree_delete_node(TreeNode *root, const char *key) {
     } else if (diff < 0) {
         root->right = tree_delete_node(root->right, key);
     } else {
-        // Node to delete found
+
         if (!root->left && !root->right) {
-            // Case 1: Leaf node
             free(root);
             return NULL;
         } else if (!root->left) {
-            // Case 2: Only right child
             TreeNode *temp = root->right;
             free(root);
             return temp;
         } else if (!root->right) {
-            // Case 2: Only left child
             TreeNode *temp = root->left;
             free(root);
             return temp;
         } else {
-            // Case 3: Two children
             TreeNode *successor = find_min(root->right);
 
-            // Copy the content instead of the key
             root->content = successor->content;
 
-            // Delete the successor
             root->right = tree_delete_node(root->right, successor->key);
         }
     }
