@@ -11,7 +11,7 @@ When coding in C at 42, we are limited to using only basic functions and system 
 
 The very first project of the curriculum, `libft`, is about building your own library of utility functions. Back then, I was only trying to pass the project without thinking much about optimization — my printf implementation, for example, wrote output byte by byte without any buffering. I was also painfully unaware of data structures and their associated algorithms.
 
-This repository is an improved version of my original libft. It includes optimized implementations of earlier functions (e.g., `ft_memset`, `ft_strlen`), and new additions I decided to build due to my growing interest in systems programming and efficient algorithms. The idea for this "libft on steroids" started when I tried to write my own implementation of the `SHA256` cryptographic hash function. Comparing the speed of my implementation to `openssl` was humbling, and it made me very interested in understanding where the huge performance gap was coming from.
+This repository is an improved version of my original libft. It includes optimized implementations of earlier functions (e.g., `ft_memset`, `ft_strlen`), and new ones I decided to build due to my interest in systems programming and efficient code. The idea for this "libft on steroids" started when I wrote my own implementation of the `SHA256` cryptographic hash function. Comparing the speed of my implementation to `openssl` was humbling, and it made me very interested in understanding where the huge performance gap was coming from.
 
 ## Compilation
 Running `make` in the root of this repository will create a static library `libft.a`, which you can compile together with other C files.
