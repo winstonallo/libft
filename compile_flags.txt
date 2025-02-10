@@ -1,5 +1,7 @@
+-Isrc
 -Isrc/alloc
 -Isrc/mem
+-Isrc/vec
 -Isrc/str
 -Isrc/print
 -Isrc/char
