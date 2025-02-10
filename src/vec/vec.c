@@ -27,7 +27,7 @@ vec_destroy(Vec *vec) {
 int
 vec_push(Vec *vec, const void *elem) {
     if (vec->size == vec->capacity) {
-        void *data = ft_realloc(vec->data, vec->capacity * 2, vec->capacity);
+        void *data = ft_realloc(vec->data, (vec->capacity * vec->elem_size) * 2, (vec->capacity * vec->elem_size));
         if (!data) {
             vec_destroy(vec);
             return -1;
