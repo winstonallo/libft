@@ -32,24 +32,44 @@ ft_memcmp(const void *a, const void *b, uint64_t n) {
     return 0;
 }
 
+// Performs block copy with `movsb` on x86-84, falls back to naive memcpy
+// on other architectures.
+//
+// `dst` and `src` MAY overlap.
 void *
-ft_memcpy(void *dest, const void *src, uint64_t n) {
-    if (!dest && !src) {
-        return NULL;
+ft_memcpy(void *dest, const void *src, size_t n) {
+    if (dest == src) {
+        return dest;
     }
 
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__)
-    __asm__ __volatile__("rep movsb" : : "S"(src), "D"(dest), "c"(n) : "memory");
+#ifdef __x86_64__
+    __asm__ volatile("mov %0, %%rsi;"
+                     "mov %1, %%rdi;"
+                     "cld;"
+                     "rep movsb"
+                     : "+a"(src), "+d"(dest)
+                     : "c"(n)
+                     : "memory", "flags", "rsi", "rdi");
 #else
-    uint64_t i = 0;
+    unsigned char *d = (unsigned char *)dest;
+    const unsigned char *s = (const unsigned char *)src;
 
-    while (i < n) {
-        ((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
-        i++;
+    if (!dest || !src || n == 0) {
+        return dest;
     }
-#endif
 
-    return dest;
+    if (d < s || d >= s + n) {
+        for (size_t i = 0; i < n; i++) {
+            d[i] = s[i];
+        }
+    } else {
+        for (size_t i = n; i > 0; i--) {
+            d[i - 1] = s[i - 1];
+        }
+    }
+
+#endif
+    return (dest);
 }
 
 void *
