@@ -44,6 +44,7 @@ $(OBJ_DIR):
 
 test: $(NAME) $(TESTS_OBJS)
 	$(CC) $(CFLAGS) -g $(TESTS_OBJS) -L. -lft -o $(TEST_NAME)
+	valgrind ./$(TEST_NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
