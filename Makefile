@@ -2,15 +2,7 @@ CC = cc
 
 BLOCK_SIZE=$(shell stat -fc %s .)
 
-CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
-	-I./src \
-	-I./src/mem \
-	-I./src/alloc \
-	-I./src/print \
-	-I./src/str \
-	-I./src/char \
-	-I./src/map \
-	-I./src/btree
+CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I./inc
 
 SRC_DIR = src
 OBJ_DIR = obj
