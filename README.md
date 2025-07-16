@@ -20,7 +20,7 @@ Running `make` in the root of this repository will create a static library `libf
 
 ### Core Utility Functions
 _Note: This README only includes basic documentation, refer to the header files for full usage advice._
-#### [Allocators](src/alloc/alloc.h)
+#### [Allocators](inc/alloc.h)
 ```c
 // Allocates a buffer of size `bytes_new` and copies `old_buf` into it.
 // Returns NULL on malloc failure, or if `bytes_old` is larger than `bytes_new`.
@@ -34,8 +34,8 @@ void *ft_calloc(uint64_t nmemb, uint64_t size) __attribute__((warn_unused_result
 // Returns NULL on malloc failure.
 void *ft_memdup(const void *src, const uint64_t bytes) __attribute__((warn_unused_result));
 ```
-#### [Memory Operations](src/mem/mem.h)
-`src/mem/mem.h`
+#### [Memory Operations](inc/mem.h)
+`inc/mem.h`
 ```c
 // Returns a pointer to the first occurence of `needle` in the first `n_bytes` of `haystack`.
 // If nothing is found, returns a NULL pointer.
@@ -51,7 +51,7 @@ void *ft_memcpy(void *dest, const void *src, uint64_t n_bytes);
 // Sets the first `n_bytes` of `src` to `c`.
 void *ft_memset(void *src, int c, uint64_t n_bytes);
 ```
-#### [String Operations](src/str/str.h)
+#### [String Operations](inc/str.h)
 ```c
 // Returns the number of bytes between `str` and the next `\0` character.
 uint64_t ft_strlen(const char *str);
@@ -88,15 +88,55 @@ bool ft_atob(const char *nptr, int base, int bits, void *out_value, bool is_sign
 bool ft_btoa(void *value, int base, int bits, char *buffer, uint64_t buffer_size, bool is_signed, bool uppercase);
 ```
 
-#### [Output Operations](src/print/print.h)
+#### [Output Operations](inc/print.h)
 ```c
 ssize_t ft_printf(int fd, const char *s, ...);
 ```
 
+#### [Ciphers](inc/cipher.h)
+**AES-256-GCM**
+```c
+// Performs AES-256-GCM authenticated encryption.
+// 
+// Encrypts the plaintext in `P->msg.data` and generates an authentication
+// tag. The resulting ciphertext and tag are stored in `C`.
+void GCM_AE(Aes256Gcm *const P, Aes256Gcm *const C);
+
+// Performs AES-256-GCM authenticated decryption.
+// 
+// Decrypts the ciphertext in `C->msg.data` and verifies its authenticity using
+// the provided authentication tag (`C->tag`). The decrypted plaintext is stored
+// in `P->msg.data` (provided the authentication step passed).
+// 
+// The return value marks the status of the authentication step (0 for success,
+// non-zero for failure).
+int GCM_AD(Aes256Gcm *const C, Aes256Gcm *const P);
+
+// Sets up the AES-256 context by expanding the provided key and storing the message.
+void AES256_Init(Aes256Data *data, const uint8_t key[AES256_KEY_SIZE_BYTES], const uint8_t *const msg, const size_t msg_len);
+```
+#### [Message Digests](inc/digest.h)
+**SHA-256 (streaming)**
+```c
+// Sets up the context with SHA-256's initial hash values and clears all buffers.
+// This must be called beore any other streaming operations.
+void sha256_stream_init(Sha256StreamingContext *const ctx);
+
+// Process a chunk of data through the SHA-256 streaming context.
+//
+// This function can be called multiple times to incrementally hash large amounts of data. It
+// handles block boundaries and buffering of incomplete blocks. For optimal performance on very
+// large inputs, use a buffer of 64KB.
+void sha256_stream_update(Sha256StreamingContext *const ctx, const uint8_t *data, size_t len);
+
+// Applies SHA-256 padding, processes any remaining buffered data, and outputs the final hash
+// as a NULL-terminated hex string.
+void sha256_stream_final(Sha256StreamingContext *const ctx, char *out);
+```
+
+
+
 ### Data Structures
 
 * **HashMap**: Hash map implementation. Collision resolution can be picked between Binary Search Tree and Linear Probing at compile time.
-  * TODO: Allow injection of custom hash function.
 
-* **BTree**: Binary Search Tree implementation.
-  * TODO: Implement self-balancing (Red Black Tree) 

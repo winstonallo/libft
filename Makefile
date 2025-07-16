@@ -2,26 +2,28 @@ CC = cc
 
 BLOCK_SIZE=$(shell stat -fc %s .)
 
-CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror \
-	-I./src \
-	-I./src/mem \
-	-I./src/alloc \
-	-I./src/print \
-	-I./src/str \
-	-I./src/char \
-	-I./src/map \
-	-I./src/btree
-
 SRC_DIR = src
+INC_DIR = inc
 OBJ_DIR = obj
+TESTS_DIR = tests
+
+CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I$(INC_DIR)
 
 NAME = libft.a
+TEST_NAME = libft_test
 
-SRCS = $(wildcard $(SRC_DIR)/**/*.c)
-HEADERS = $(wildcard $(SRC_DIR)/**/*.h)
+TESTS_SRCS = $(shell find $(TESTS_DIR) -name "*.c")
+SRCS = $(shell find $(SRC_DIR) -name "*.c")
+HEADERS = $(wildcard $(INC_DIR)/**/*.h)
+TESTS_OBJS = $(patsubst $(TESTS_DIR)/%.c, $(OBJ_DIR)/tests/%.o, $(TESTS_SRCS))
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-.PHONY: all clean fclean re
+$(info TESTS_SRCS: $(TESTS_SRCS))
+$(info TESTS_OBJS: $(TESTS_OBJS))
+$(info SRCS: $(SRCS))
+$(info OBJS: $(OBJS))
+
+.PHONY: all clean fclean re test
 
 all: $(NAME)
 
@@ -33,13 +35,21 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR)/tests/%.o: $(TESTS_DIR)/%.c $(HEADERS) | $(OBJ_DIR)
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -g -c $< -o $@
+
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+
+test: $(NAME) $(TESTS_OBJS)
+	$(CC) $(CFLAGS) -g $(TESTS_OBJS) -L. -lft -o $(TEST_NAME)
+	valgrind ./$(TEST_NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(TEST_NAME)
 
 re: fclean all

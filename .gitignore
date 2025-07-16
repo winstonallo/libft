@@ -1,4 +1,5 @@
 obj
 *.a
+libft_test
 main.c
 *.out
