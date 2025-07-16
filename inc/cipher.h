@@ -1,6 +1,6 @@
 
-#ifndef AES_H
-#define AES_H
+#ifndef CIPHER_H
+#define CIPHER_H
 
 #include <stddef.h>
 #include <stdint.h>

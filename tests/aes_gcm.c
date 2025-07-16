@@ -1,4 +1,4 @@
-#include "aes.h"
+#include "cipher.h"
 #include "mem.h"
 #include <assert.h>
 #include <stdbool.h>
