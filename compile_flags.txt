@@ -1,11 +1,4 @@
--Isrc/alloc
--Isrc/mem
--Isrc/str
--Isrc/print
--Isrc/char
--Isrc/bit
--Isrc/map
--Isrc/btree
+-I./inc
 -Wall
 -Wextra
 -Werror
