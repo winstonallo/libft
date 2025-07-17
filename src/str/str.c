@@ -5,45 +5,61 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
+#ifdef __AVX2__
+#include <immintrin.h>
+#endif
 
-uint64_t
+size_t
 ft_strlen(const char *str) {
-    const char *char_ptr;
+    const char *char_ptr = str;
 
-    // Process `str` byte-by-byte until `char_ptr` is aligned to a word boundary.
-    //
-    // Why does the pointer need to be aligned?
-    // - CPUs fetch memory in chunks (32 or 64 bits) rather than byte-by-byte.
-    // - Starting at an unaligned address may cause additional overhead or slower fetches, because
-    //   the CPU could have to fetch twice for the same word.
-    //
-    // We iterate over the input string one byte at a time until `char_ptr` points
-    // to a memory address that is a multiple of `OPTSIZ` (the word size). Once we know it is aligned,
-    // we can process the string more efficiently.
-    for (char_ptr = str; ((op_t)char_ptr % OPTSIZ) != 0; ++char_ptr) {
+#if defined(__AVX2__) && EXTERNAL_FUNCTIONS_ALLOWED == 1
+    while (((uintptr_t)char_ptr & 31) != 0) {
+        if (*char_ptr == '\0') {
+            return char_ptr - str;
+        }
+        char_ptr++;
+    }
 
-        // If we find a null byte before aligment (aka the string length is less than `OPTSIZ - 1`),
-        // we return the length.
+    // SIMD go brrr
+    const __m256i *vec_ptr = (const __m256i *)char_ptr;
+    const __m256i zero_vec = _mm256_setzero_si256();
+
+    for (;;) {
+        __m256i chunk = _mm256_load_si256(vec_ptr);
+        __m256i cmp = _mm256_cmpeq_epi8(chunk, zero_vec);
+
+        uint32_t mask = _mm256_movemask_epi8(cmp);
+
+        if (mask != 0) {
+            int pos = __builtin_ctz(mask);
+            return (const char *)vec_ptr + pos - str;
+        }
+
+        vec_ptr++;
+    }
+
+#else
+    for (char_ptr = str; ((size_t)char_ptr % __SIZEOF_POINTER__) != 0; ++char_ptr) {
         if (*char_ptr == '\0') {
             return char_ptr - str;
         }
     }
 
-    const op_t *op_t_ptr = (op_t *)char_ptr;
-
-    // All MSB set.
-    op_t himagic = 0x80808080L;
-    // All LSB set.
-    op_t lomagic = 0x01010101L;
+    const size_t *size_t_ptr = (size_t *)char_ptr;
 
 #if __SIZEOF_POINTER__ == 8
-    // 64-bit architecture, extend magic numbers.
-    himagic = ((himagic << 16) << 16) | himagic;
-    lomagic = ((lomagic << 16) << 16) | lomagic;
+    // all MSB set
+    static const size_t himagic = 0x8080808080808080UL;
+    // all LSB set
+    static const size_t lomagic = 0x0101010101010101UL;
+#else
+    static const size_t himagic = 0x80808080L;
+    static const size_t lomagic = 0x01010101L;
 #endif
 
     for (;;) {
-        op_t lw = *op_t_ptr++;
+        size_t lw = *size_t_ptr++;
 
         // This condition is the magic behind the optimization. It detects NULL bytes in 32/64-bit
         // words (depending on the CPU architecture). Instead of checking each byte individually, this
@@ -74,31 +90,16 @@ ft_strlen(const char *str) {
         // take a pen and paper and calculate it by hand a few times, with numbers that do/do not contain null bytes.
         // It will help you see the pattern.
         if (((lw - lomagic) & ~lw & himagic) != 0) {
-            const char *char_block_ptr = (const char *)(op_t_ptr - 1);
+            const char *char_block_ptr = (const char *)(size_t_ptr - 1);
 
-            if (char_block_ptr[0] == '\0') {
-                return char_block_ptr - str;
-            } else if (char_block_ptr[1] == '\0') {
-                return char_block_ptr + 1 - str;
-            } else if (char_block_ptr[2] == '\0') {
-                return char_block_ptr + 2 - str;
-            } else if (char_block_ptr[3] == '\0') {
-                return char_block_ptr + 3 - str;
+            for (int i = 0; i < __SIZEOF_POINTER__; i++) {
+                if (char_block_ptr[i] == '\0') {
+                    return char_block_ptr + i - str;
+                }
             }
-
-#if __SIZEOF_POINTER__ == 8
-            if (char_block_ptr[4] == '\0') {
-                return char_block_ptr + 4 - str;
-            } else if (char_block_ptr[5] == '\0') {
-                return char_block_ptr + 5 - str;
-            } else if (char_block_ptr[6] == '\0') {
-                return char_block_ptr + 6 - str;
-            } else if (char_block_ptr[7] == '\0') {
-                return char_block_ptr + 7 - str;
-            }
-#endif
         }
     }
+#endif
 }
 
 char *
