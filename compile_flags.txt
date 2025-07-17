@@ -2,3 +2,5 @@
 -Wall
 -Wextra
 -Werror
+-mavx2
+-DEXTERNAL_FUNCTIONS_ALLOWED=1
