@@ -7,7 +7,7 @@ INC_DIR = inc
 OBJ_DIR = obj
 TESTS_DIR = tests
 
-CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I$(INC_DIR)
+CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I$(INC_DIR) -mavx2 -march=native -mtune=native -flto
 
 NAME = libft.a
 TEST_NAME = libft_test
@@ -17,11 +17,6 @@ SRCS = $(shell find $(SRC_DIR) -name "*.c")
 HEADERS = $(wildcard $(INC_DIR)/**/*.h)
 TESTS_OBJS = $(patsubst $(TESTS_DIR)/%.c, $(OBJ_DIR)/tests/%.o, $(TESTS_SRCS))
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
-
-$(info TESTS_SRCS: $(TESTS_SRCS))
-$(info TESTS_OBJS: $(TESTS_OBJS))
-$(info SRCS: $(SRCS))
-$(info OBJS: $(OBJS))
 
 .PHONY: all clean fclean re test
 
