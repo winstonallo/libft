@@ -221,8 +221,8 @@ test_vector_16() {
     return true;
 }
 
-int
-main() {
+void
+test_aesgcm() {
     assert(test_changed_aad());
     assert(test_changed_ciphertext());
     assert(test_vector_13());
