@@ -7,7 +7,7 @@ INC_DIR = inc
 OBJ_DIR = obj
 TESTS_DIR = tests
 
-CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I$(INC_DIR) -mavx2 -march=native -mtune=native -flto
+CFLAGS = -O3 -DFS_BLOCK_SIZE=${BLOCK_SIZE} -Wall -Wextra -Werror -I$(INC_DIR) -mavx2 -march=native -mtune=native
 
 NAME = libft.a
 TEST_NAME = libft_test
