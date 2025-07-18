@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 __attribute__((always_inline)) static inline bool
@@ -41,6 +42,9 @@ vec_new(Vec *const vec, const void *const data, const size_t n_elems, const size
 
 int
 vec_push(Vec *const vec, const void *const elem) {
+    assert(vec != NULL);
+    assert(elem != NULL);
+
     if (vec->capacity < (vec->n_elems + 1)) {
         const size_t new_capacity = vec->capacity * 2;
         void *new_data = ft_realloc(vec->data, new_capacity * vec->elem_size, vec->capacity * vec->elem_size);
@@ -58,6 +62,9 @@ vec_push(Vec *const vec, const void *const elem) {
 
 int
 vec_push_many(Vec *const vec, const void *const elems, const size_t n_elems) {
+    assert(vec != NULL);
+    assert(elems != NULL);
+
     if (vec->capacity < (vec->n_elems + n_elems)) {
         size_t new_capacity = vec->capacity;
         while (new_capacity < vec->n_elems + n_elems) {
@@ -73,6 +80,61 @@ vec_push_many(Vec *const vec, const void *const elems, const size_t n_elems) {
 
     ft_memcpy(vec->data + (vec->n_elems * vec->elem_size), elems, vec->elem_size * n_elems);
     vec->n_elems += n_elems;
+    return 0;
+}
+
+int
+vec_pop(Vec *const vec, const ssize_t idx, void *const out) {
+    assert(vec != NULL);
+
+    const size_t actual_idx = idx >= 0 ? idx : (ssize_t)vec->n_elems + idx;
+    if (actual_idx >= vec->n_elems) {
+        return -1;
+    }
+
+    if (out != NULL) {
+        ft_memcpy(out, vec->data + (actual_idx * vec->elem_size), vec->elem_size);
+    }
+
+    if (idx == -1 || actual_idx == vec->n_elems - 1) {
+        vec->n_elems--;
+        return 0;
+    }
+
+    const size_t remaining = vec->n_elems - idx - 1;
+    vec->n_elems--;
+
+    ft_memcpy(vec->data + (actual_idx * vec->elem_size), vec->data + ((actual_idx + 1) * vec->elem_size), remaining * vec->elem_size);
+
+    return 0;
+}
+
+int
+vec_pop_range(Vec *const vec, const size_t start, size_t end, void *const out) {
+    assert(vec != NULL);
+    assert(end >= start);
+    assert(start < vec->n_elems);
+
+    if (end >= vec->n_elems) {
+        end = vec->n_elems - 1;
+    }
+
+    size_t n_elems = end - start + 1;
+
+    if (out != NULL) {
+        ft_memcpy(out, vec->data + (start * vec->elem_size), vec->elem_size * n_elems);
+    }
+
+    if (end == vec->n_elems - 1) {
+        vec->n_elems -= n_elems;
+        return 0;
+    }
+
+    const size_t remaining = vec->n_elems - start - n_elems;
+    vec->n_elems -= n_elems;
+
+    ft_memcpy(vec->data + (start * vec->elem_size), vec->data + ((end + 1) * vec->elem_size), remaining * vec->elem_size);
+
     return 0;
 }
 

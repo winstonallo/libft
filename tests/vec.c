@@ -99,6 +99,53 @@ test_vec_push_many_should_push_many_complex_types() {
 }
 
 void
+test_vec_pop() {
+    Vec vec;
+    uint64_t elems[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    uint64_t out = 0;
+
+    vec_new(&vec, elems, 8, sizeof(uint64_t), 0);
+
+    vec_pop(&vec, 7, &out);
+    assert(out == 7);
+    assert(vec.n_elems == 7);
+
+    vec_delete(&vec);
+}
+
+void
+test_vec_pop_middle() {
+    Vec vec;
+    uint64_t elems[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    uint64_t out = 0;
+
+    vec_new(&vec, elems, 8, sizeof(uint64_t), 0);
+
+    vec_pop(&vec, 4, &out);
+    assert(out == 4);
+    assert(vec.n_elems == 7);
+    assert(((uint64_t *)vec.data)[6] == 7);
+
+    vec_delete(&vec);
+}
+
+void
+test_pop_range_middle() {
+    Vec vec;
+    uint64_t elems[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    uint64_t out[3] = {0};
+
+    vec_new(&vec, elems, 8, sizeof(uint64_t), 0);
+
+    vec_pop_range(&vec, 4, 6, &out);
+    assert(out[0] == 4);
+    assert(out[1] == 5);
+    assert(out[2] == 6);
+
+    vec_delete(&vec);
+}
+
+void
 test_vec() {
     test_vec_new_capacity_0_should_allocate_n_elems();
     test_vec_new_capacity_larger_than_n_elems_should_allocate_capacity();
@@ -107,4 +154,7 @@ test_vec() {
     test_vec_push_should_push_elem_and_realloc_if_necessary();
     test_vec_push_many_should_push_many();
     test_vec_push_many_should_push_many_complex_types();
+    test_vec_pop();
+    test_vec_pop_middle();
+    test_pop_range_middle();
 }
