@@ -26,12 +26,17 @@ ft_strlen(const char *str) {
     const __m256i zero_vec = _mm256_setzero_si256();
 
     for (;;) {
+        // load next 32 bytes into avx2 register
         __m256i chunk = _mm256_load_si256(vec_ptr);
+        // compare all bytes against zero simultaneously
         __m256i cmp = _mm256_cmpeq_epi8(chunk, zero_vec);
-
+        // take high bit of each comparison and pack them into
+        // a 32-bit int
         uint32_t mask = _mm256_movemask_epi8(cmp);
 
         if (mask != 0) {
+            // count trailing zeros -> find pos of first set bit
+            // (null byte pos)
             int pos = __builtin_ctz(mask);
             return (const char *)vec_ptr + pos - str;
         }
