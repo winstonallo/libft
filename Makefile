@@ -14,7 +14,7 @@ TEST_NAME = libft_test
 
 TESTS_SRCS = $(shell find $(TESTS_DIR) -name "*.c")
 SRCS = $(shell find $(SRC_DIR) -name "*.c")
-HEADERS = $(shell find $(INC_DIR) -name ".h")
+HEADERS = $(shell find $(INC_DIR) -name "*.h")
 TESTS_OBJS = $(patsubst $(TESTS_DIR)/%.c, $(OBJ_DIR)/tests/%.o, $(TESTS_SRCS))
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
